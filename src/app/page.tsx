@@ -4,6 +4,7 @@ import Marquee from "@/components/home/Marquee";
 import Newsletter from "@/components/home/Newsletter";
 import TopPicks from "@/components/home/TopPicks";
 import Trending from "@/components/home/Trending";
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
         <TopPicks />
         <Newsletter />
       </div>
+      <Footer />
     </>
   );
 }

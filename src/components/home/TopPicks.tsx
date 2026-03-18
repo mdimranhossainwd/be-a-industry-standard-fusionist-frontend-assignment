@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
 import * as motion from "framer-motion/client";
+import { ArrowUpRight } from "lucide-react";
 
 export default function TopPicks() {
   const topIdeas = [
@@ -37,19 +37,22 @@ export default function TopPicks() {
   return (
     <section className="bg-[#071810] py-24 relative overflow-hidden">
       {/* Background Dots Pattern */}
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-        style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
       ></div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
           <div>
             <div className="inline-flex w-fit items-center gap-2 px-3 py-1 mb-4 rounded-full bg-yellow-500/10 text-yellow-500 font-bold text-xs uppercase tracking-widest border border-yellow-500/20">
               ⚡ TOP RATED
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold font-syne text-white leading-tight">
-              The community's <br/>
+            <h2 className="text-4xl md:text-5xl font-extrabold font-syne text-white leading-tight">
+              The community's <br />
               <span className="text-primary-green">top 3 picks</span>
             </h2>
           </div>
@@ -90,11 +93,10 @@ export default function TopPicks() {
                 <div className="flex items-center justify-between border-t border-white/10 pt-6">
                   <div className="flex items-center gap-4 text-sm font-semibold text-white/80">
                     <span className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-primary-green" /> {idea.upvotes}
+                      <ArrowUpRight className="w-3.5 h-3.5 text-primary-green" />{" "}
+                      {idea.upvotes}
                     </span>
-                    <span className="text-gray-500">
-                      💬 {idea.comments}
-                    </span>
+                    <span className="text-gray-500">💬 {idea.comments}</span>
                   </div>
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary-green text-sm font-bold flex items-center gap-1">
                     View Idea &rarr;

@@ -13,7 +13,7 @@ export default function Marquee() {
   ];
 
   return (
-    <div className="w-full bg-[#11231a] py-4 overflow-hidden border-y border-white/10 flex items-center relative z-10">
+    <div className="w-full bg-[#1A6B3C] py-4 overflow-hidden border-y border-white/10 flex items-center relative z-10">
       <div className="flex whitespace-nowrap overflow-hidden">
         <motion.div
           animate={{ x: [0, -1000] }}
