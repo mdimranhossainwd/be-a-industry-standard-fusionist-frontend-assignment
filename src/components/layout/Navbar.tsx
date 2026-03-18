@@ -1,59 +1,263 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
 
-export default function Navbar() {
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  Navbar,
+  NavbarButton,
+  NavbarLogo,
+  NavBody,
+  NavItems,
+} from "@/components/ui/resizable-navbar";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { useState } from "react";
+import { Button } from "../ui/button";
+// import { ModeToggle } from "@/components/ui/ModeToggle";
+
+type User = {
+  id: string;
+  email: string;
+  name: string;
+  role: "STUDENT" | "TUTOR" | "ADMIN";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+
+  //   if (storedUser) {
+  //     try {
+  //       setUser(JSON.parse(storedUser) as User);
+  //     } catch (err) {
+  //       console.error("Failed to parse user from localStorage", err);
+  //       setUser(null);
+  //     }
+  //   }
+  // }, []);
+
+  const navItems = [
+    { name: "Home", link: "/" },
+    { name: "All Ideas", link: "/all-ideas" },
+    { name: "Blog", link: "/blog" },
+  ];
+
+  if (user) {
+    switch (user.role) {
+      case "STUDENT":
+        navItems.push({ name: "Dashboard", link: "/dashboard" });
+        break;
+      case "TUTOR":
+        navItems.push({ name: "Dashboard", link: "/tutor/dashboard" });
+        break;
+      case "ADMIN":
+        navItems.push({ name: "Dashboard", link: "/admin" });
+        break;
+    }
+  }
+
+  const dropdownMenuItem = {
+    name: "Dashboard",
+    link: "/dashboard",
+  };
+
+  if (user) {
+    switch (user.role) {
+      case "STUDENT":
+        dropdownMenuItem.link = "/dashboard";
+        break;
+      case "TUTOR":
+        dropdownMenuItem.link = "/tutor/dashboard";
+
+        break;
+      case "ADMIN":
+        dropdownMenuItem.link = "/admin";
+        break;
+    }
+  }
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#faf8f3]/80 backdrop-blur-md border-b border-black/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-2xl font-bold font-syne text-primary-green"
-        >
-          <div className="w-8 h-8 rounded bg-primary-green flex items-center justify-center text-white">
-            <span>E</span>
+    <Navbar>
+      <NavBody>
+        <NavbarLogo />
+        <NavItems items={navItems} />
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
+            {user ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full cursor-pointer"
+                      >
+                        <Avatar>
+                          <AvatarFallback className="font-bold text-primary">
+                            {user.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-32">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            (window.location.href = dropdownMenuItem.link)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {dropdownMenuItem.name}
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          // onClick={handleLogout}
+                          variant="destructive"
+                          className="cursor-pointer"
+                        >
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex gap-3">
+                  <NavbarButton
+                    className="dark:bg-primary dark:text-white"
+                    href="/login"
+                  >
+                    Login
+                  </NavbarButton>
+                  <NavbarButton
+                    className="dark:bg-primary dark:text-white"
+                    href="/register"
+                  >
+                    Sign Up
+                  </NavbarButton>
+                </div>
+              </>
+            )}
           </div>
-          EcoSpark Hub
-        </Link>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
-          <Link href="/" className="hover:text-primary-green transition-colors">
-            Home
-          </Link>
-          <Link
-            href="/ideas"
-            className="hover:text-primary-green transition-colors"
-          >
-            Ideas
-          </Link>
-          <Link
-            href="/leaderboard"
-            className="hover:text-primary-green transition-colors"
-          >
-            Leaderboard
-          </Link>
-          <Link
-            href="/about"
-            className="hover:text-primary-green transition-colors"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/blog"
-            className="hover:text-primary-green transition-colors"
-          >
-            Blog
-          </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <Button className="bg-primary-green hover:bg-primary-green/90 text-white rounded-full px-6 py-5 hidden sm:flex text-sm font-medium">
-            Add Your Idea &rarr;
-          </Button>
-          <Avatar className="h-10 w-10 border-2 border-white shadow-sm cursor-pointer">
-            <AvatarImage src="https://i.pravatar.cc/150?img=33" alt="Avatar" />
-            <AvatarFallback>EH</AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
-    </nav>
+      </NavBody>
+      <MobileNav visible={mobileMenuOpen}>
+        <MobileNavHeader>
+          <NavbarLogo />
+          <div className="flex items-center space-x-2">
+            <MobileNavToggle
+              isOpen={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            />
+          </div>
+        </MobileNavHeader>
+        <MobileNavMenu
+          isOpen={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+        >
+          <NavItems
+            items={navItems}
+            className="flex flex-col space-x-0 space-y-4 relative w-full items-start"
+          />
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
+              {user ? (
+                <>
+                  <div className="flex items-center flex-col gap-4">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="rounded-full cursor-pointer"
+                        >
+                          <Avatar>
+                            <AvatarFallback className="font-bold text-primary">
+                              <span className="text-white font-bold text-xl">
+                                {user?.name
+                                  ?.trim()
+                                  .split(/\s+/)
+                                  .slice(0, 2)
+                                  .map((w) => w[0].toUpperCase())
+                                  .join("")}
+                              </span>
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-32">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              (window.location.href = dropdownMenuItem.link)
+                            }
+                            className="cursor-pointer"
+                          >
+                            {dropdownMenuItem.name}
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            // onClick={handleLogout}
+                            variant="destructive"
+                            className="cursor-pointer"
+                          >
+                            Log out
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <NavbarButton
+                      className="dark:bg-primary dark:text-white"
+                      href="/contact"
+                    >
+                      Get Started
+                    </NavbarButton>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-3 flex-col">
+                    <NavbarButton
+                      className="dark:bg-primary dark:text-white"
+                      href="/login"
+                    >
+                      Login
+                    </NavbarButton>
+                    <NavbarButton
+                      className="dark:bg-primary dark:text-white"
+                      href="/register"
+                    >
+                      Sign Up
+                    </NavbarButton>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </MobileNavMenu>
+      </MobileNav>
+    </Navbar>
   );
 }
