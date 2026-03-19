@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { bookingService } from "@/lib/services/booking.service";
 import { reviewService } from "@/lib/services/review.service";
-import type { Booking, CreateReviewRequest } from "@/types/api";
+import type { Booking, CreateReviewRequest } from "@/types/api.types";
 import { Calendar, Clock, DollarSign, Loader2, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

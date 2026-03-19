@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { User } from "@/types/api";
 import { authService } from "@/lib/services";
+import type { User } from "@/types/api.types";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function useAuth(requiredRole?: "STUDENT" | "TUTOR" | "ADMIN") {
   const router = useRouter();

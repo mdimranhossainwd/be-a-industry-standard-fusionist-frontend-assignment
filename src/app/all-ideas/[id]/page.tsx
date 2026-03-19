@@ -3,7 +3,7 @@ import { Header } from "@/components/layout/navbar";
 import { BookingForm } from "@/components/tutors/booking-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { env } from "@/lib/env";
-import type { Review, TutorProfile } from "@/types/api";
+import type { Review, TutorProfile } from "@/types/api.types";
 import { BookOpen, Clock, DollarSign, Mail, Star } from "lucide-react";
 import { notFound } from "next/navigation";
 

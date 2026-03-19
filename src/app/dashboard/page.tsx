@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { bookingService } from "@/lib/services/booking.service";
-import type { Booking } from "@/types/api";
+import type { Booking } from "@/types/api.types";
 import { Calendar, CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";

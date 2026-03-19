@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { TutorProfile } from "@/types/api";
-import { Loader2, Plus } from "lucide-react";
-import { toast } from "sonner";
 import { tutorService } from "@/lib/services/tutor.service";
+import type { TutorProfile } from "@/types/api.types";
+import { Loader2, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type AvailabilityMap = Record<string, string[]>;
 
@@ -27,10 +27,9 @@ const DAYS = [
   "sunday",
 ] as const;
 
-
 function validateTimeFormat(slot: string): boolean {
-  
-  const timeRangeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+  const timeRangeRegex =
+    /^([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
   return timeRangeRegex.test(slot);
 }
 
@@ -65,7 +64,6 @@ function checkOverlap(existingSlots: string[], newSlot: string): boolean {
 
     const existStartMin = parseTime(existStart);
     const existEndMin = parseTime(existEnd);
-
 
     return (
       (newStartMin >= existStartMin && newStartMin < existEndMin) ||

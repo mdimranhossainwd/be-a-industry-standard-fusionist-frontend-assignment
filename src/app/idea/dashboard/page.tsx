@@ -4,7 +4,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { bookingService } from "@/lib/services/booking.service";
-import type { Booking } from "@/types/api";
+import type { Booking } from "@/types/api.types";
 import { Calendar, DollarSign, Loader2, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

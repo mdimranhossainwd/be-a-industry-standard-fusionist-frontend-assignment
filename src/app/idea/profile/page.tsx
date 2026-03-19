@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { authService } from "@/lib/services";
 import { categoryService } from "@/lib/services/category.service";
 import { tutorService } from "@/lib/services/tutor.service";
-import type { Category } from "@/types/api";
+import type { Category } from "@/types/api.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -59,41 +59,41 @@ export default function TutorProfilePage() {
   const selectedCategoryIds = watch("categoryIds") || [];
 
   useEffect(() => {
-  const loadData = async () => {
-    try {
-      const [cats, user] = await Promise.all([
-        categoryService.getAllCategories(),
-        authService.getProfile(),
-      ]);
-      
-      console.log("👤 User data:", user); // ✅ Check করুন কি আসছে
-      
-      setCategories(cats);
+    const loadData = async () => {
+      try {
+        const [cats, user] = await Promise.all([
+          categoryService.getAllCategories(),
+          authService.getProfile(),
+        ]);
 
-      // ✅ Safe check
-      if (user?.tutorProfile) {
-        reset({
-          bio: user.tutorProfile.bio || "",
-          hourlyRate: user.tutorProfile.hourlyRate || 0,
-          subjects: Array.isArray(user.tutorProfile.subjects) 
-            ? user.tutorProfile.subjects.join(", ") 
-            : "",
-          categoryIds: Array.isArray(user.tutorProfile.categories)
-            ? user.tutorProfile.categories.map((c) => c.id)
-            : [],
-        });
-      } else {
-        console.log("⚠️ No tutor profile found");
+        console.log("👤 User data:", user); // ✅ Check করুন কি আসছে
+
+        setCategories(cats);
+
+        // ✅ Safe check
+        if (user?.tutorProfile) {
+          reset({
+            bio: user.tutorProfile.bio || "",
+            hourlyRate: user.tutorProfile.hourlyRate || 0,
+            subjects: Array.isArray(user.tutorProfile.subjects)
+              ? user.tutorProfile.subjects.join(", ")
+              : "",
+            categoryIds: Array.isArray(user.tutorProfile.categories)
+              ? user.tutorProfile.categories.map((c) => c.id)
+              : [],
+          });
+        } else {
+          console.log("⚠️ No tutor profile found");
+        }
+      } catch (error) {
+        console.error("Failed to load profile data:", error);
+        toast.error("Failed to load profile data");
+      } finally {
+        setIsInitialLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to load profile data:", error);
-      toast.error("Failed to load profile data");
-    } finally {
-      setIsInitialLoading(false);
-    }
-  };
-  loadData();
-}, [reset]);
+    };
+    loadData();
+  }, [reset]);
 
   const onSubmit = async (data: TutorProfileFormData) => {
     setIsLoading(true);

@@ -5,7 +5,7 @@ import { IdeaCard } from "@/components/tutors/tutor-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { IdeaProfile } from "@/types/api";
+import type { IdeaProfile } from "@/types/api.types";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,

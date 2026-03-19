@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { IdeaProfile } from "@/types/api";
+import type { IdeaProfile } from "@/types/api.types";
 import { motion } from "framer-motion";
 import { ArrowBigUp, Eye, Lock, MessageSquare, Sparkles } from "lucide-react";
 import Image from "next/image";
