@@ -151,3 +151,38 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+// Add this to your existing types/api.ts file
+
+export interface IdeaProfile {
+  id: string;
+  title: string;
+  slug: string;
+  problemStatement?: string | null;
+  proposedSolution?: string | null;
+  description?: string | null;
+  status: "DRAFT" | "UNDER_REVIEW" | "APPROVED" | "REJECTED";
+  isPaid: boolean;
+  price?: string | null;
+  isHighlighted: boolean;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  images: string[];
+  author: {
+    id: string;
+    name: string;
+    image?: string | null;
+  };
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+    color?: string | null;
+    iconUrl?: string | null;
+  };
+  _count: {
+    votes: number;
+    comments: number;
+  };
+}

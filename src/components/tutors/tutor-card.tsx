@@ -1,19 +1,65 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { TutorProfile } from "@/types/api";
+import type { IdeaProfile } from "@/types/api";
 import { motion } from "framer-motion";
-import { Award, Star } from "lucide-react";
+import { ArrowBigUp, Eye, Lock, MessageSquare, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-interface TutorCardProps {
-  tutor: TutorProfile;
+interface IdeaCardProps {
+  idea: IdeaProfile;
 }
 
-export function TutorCard({ tutor }: TutorCardProps) {
-  const isTopRated = (tutor.averageRating || 0) >= 4.5;
+// Status badge config
+const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
+  DRAFT: {
+    label: "Draft",
+    className: "bg-gray-100 text-gray-600 border-gray-200",
+  },
+  UNDER_REVIEW: {
+    label: "Under Review",
+    className: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  },
+  APPROVED: {
+    label: "Approved",
+    className: "bg-green-50 text-green-700 border-green-200",
+  },
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-red-50 text-red-700 border-red-200",
+  },
+};
+
+export function IdeaCard({ idea }: IdeaCardProps) {
+  const isHighlighted = idea.isHighlighted;
+  const isPaid = idea.isPaid;
+  const statusConfig = STATUS_CONFIG[idea.status] ?? STATUS_CONFIG["DRAFT"];
+  const upvotes = idea._count?.votes ?? 0;
+  const comments = idea._count?.comments ?? 0;
+
+  // Author initials
+  const authorInitials =
+    idea.author?.name
+      ?.trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((w) => w[0].toUpperCase())
+      .join("") ?? "?";
+
+  // Published date
+  const publishedDate = idea.publishedAt
+    ? new Date(idea.publishedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : new Date(idea.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
 
   return (
     <motion.div
@@ -21,89 +67,131 @@ export function TutorCard({ tutor }: TutorCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -4 }}
+      className="h-full"
     >
-      <Card className="hover:shadow-2xl transition-all duration-300 border-gray-100 overflow-hidden group h-full">
-        <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
-          <div className="flex items-start gap-2 sm:gap-3 md:gap-4 mb-2 sm:mb-3 md:mb-4">
-            <div className="relative shrink-0">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-blue-600 via-purple-400 to-purple-500 p-0.5 sm:p-1">
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-blue-600 to-purple-400 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm sm:text-base md:text-xl">
-                      {tutor.user?.name
-                        ?.trim()
-                        .split(/\s+/)
-                        .slice(0, 2)
-                        .map((w) => w[0].toUpperCase())
-                        .join("")}
-                    </span>
-                  </div>
-                </div>
+      <Card
+        className={`hover:shadow-2xl transition-all duration-300 overflow-hidden group h-full flex flex-col ${
+          isHighlighted
+            ? "border-emerald-400 ring-1 ring-emerald-300"
+            : "border-gray-100"
+        }`}
+      >
+        <CardContent className="p-0 flex flex-col h-full">
+          {/* Thumbnail / Image Area */}
+          <div className="relative w-full h-36 sm:h-40 md:h-44 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-hidden shrink-0">
+            {idea.images && idea.images.length > 0 ? (
+              <Image
+                src={idea.images[0]}
+                alt={idea.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Sparkles className="h-10 w-10 text-emerald-300" />
               </div>
-              {isTopRated && (
-                <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-blue-600 rounded-full p-0.5 sm:p-1 shadow-md">
-                  <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-4 md:w-4 text-white" />
-                </div>
+            )}
+
+            {/* Overlay badges top-left */}
+            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-wrap gap-1">
+              {/* Category */}
+              {idea.category && (
+                <span
+                  className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm text-white"
+                  style={{
+                    backgroundColor: idea.category.color ?? "#059669",
+                  }}
+                >
+                  {idea.category.name}
+                </span>
+              )}
+              {/* Status */}
+              <span
+                className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border shadow-sm ${statusConfig.className}`}
+              >
+                {statusConfig.label}
+              </span>
+            </div>
+
+            {/* Paid / Free badge top-right */}
+            <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+              {isPaid ? (
+                <span className="flex items-center gap-0.5 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-md">
+                  <Lock className="h-2.5 w-2.5" />${idea.price}
+                </span>
+              ) : (
+                <span className="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-md">
+                  Free
+                </span>
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-sm sm:text-base md:text-lg truncate text-gray-900 group-hover:text-blue-600 transition-colors">
-                {tutor.user?.name || "Anonymous Tutor"}
-              </h3>
-              <div className="flex items-center gap-0.5 sm:gap-1 mt-0.5 sm:mt-1">
-                <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs sm:text-xs md:text-sm font-semibold text-gray-900">
-                  {tutor.averageRating?.toFixed(1) || "0.0"}
-                </span>
-                <span className="text-xs sm:text-xs md:text-sm text-gray-500">
-                  ({tutor.totalReviews || 0})
-                </span>
+
+            {/* Highlighted ribbon */}
+            {isHighlighted && (
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[10px] sm:text-xs font-semibold text-center py-0.5 tracking-wide">
+                ⭐ Featured Idea
               </div>
-            </div>
+            )}
           </div>
 
-          {tutor.bio && (
-            <p className="text-xs sm:text-xs md:text-sm text-gray-600 line-clamp-2 mb-2 sm:mb-3 md:mb-4 leading-relaxed">
-              {tutor.bio}
-            </p>
-          )}
+          {/* Card Body */}
+          <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-1 gap-2 sm:gap-3">
+            {/* Title */}
+            <h3 className="font-bold text-sm sm:text-base md:text-lg leading-snug text-gray-900 group-hover:text-emerald-700 transition-colors line-clamp-2">
+              {idea.title}
+            </h3>
 
-          <div className="space-y-2 sm:space-y-3 md:space-y-4">
-            <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
-              {(tutor.subjects || []).slice(0, 3).map((subject) => (
-                <Badge
-                  key={subject}
-                  variant="secondary"
-                  className="rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 border-0 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5"
-                >
-                  {subject}
-                </Badge>
-              ))}
-              {tutor.subjects && tutor.subjects.length > 3 && (
-                <Badge
-                  variant="outline"
-                  className="rounded-full border-blue-200 text-blue-600 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5"
-                >
-                  +{tutor.subjects.length - 3}
-                </Badge>
-              )}
-            </div>
+            {/* Problem Statement */}
+            {idea.problemStatement && (
+              <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                {idea.problemStatement}
+              </p>
+            )}
 
-            <div className="flex items-center justify-between pt-2 sm:pt-3 md:pt-4 border-t border-gray-100 gap-2 sm:gap-3">
-              <div className="shrink-0">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-                  ${tutor.hourlyRate}
-                </div>
-                <span className="text-[10px] sm:text-xs text-gray-500">
-                  per hour
+            {/* Author + Date */}
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100">
+              {/* Avatar */}
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center shrink-0 shadow-sm">
+                <span className="text-white text-[9px] sm:text-[10px] font-bold">
+                  {authorInitials}
                 </span>
               </div>
-              <Link href={`/tutors/${tutor.id}`} className="shrink-0">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-4 h-8 sm:h-9 md:h-10">
-                  View Profile
-                </Button>
-              </Link>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] sm:text-xs font-semibold text-gray-700 truncate">
+                  {idea.author?.name ?? "Anonymous"}
+                </p>
+                <p className="text-[9px] sm:text-[10px] text-gray-400">
+                  {publishedDate}
+                </p>
+              </div>
+
+              {/* Vote + Comment counts */}
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                <div className="flex items-center gap-0.5 text-gray-500">
+                  <ArrowBigUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />
+                  <span className="text-[10px] sm:text-xs font-semibold">
+                    {upvotes}
+                  </span>
+                </div>
+                <div className="flex items-center gap-0.5 text-gray-500">
+                  <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                  <span className="text-[10px] sm:text-xs font-semibold">
+                    {comments}
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {/* View Button */}
+            <Link
+              href={`/ideas/${idea.slug ?? idea.id}`}
+              className="block mt-1 sm:mt-2"
+            >
+              <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 gap-1.5">
+                <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                {isPaid ? "Unlock Idea" : "View Idea"}
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
