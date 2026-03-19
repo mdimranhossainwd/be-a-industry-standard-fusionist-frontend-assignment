@@ -3,7 +3,7 @@ import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";
 import TopPicksSection from "@/components/layout/newsletter";
 import HeroSection from "@/components/pages/hero";
-import IdeaCardDemo from "./tutors/page";
+import IdeaCardDemo from "./all-ideas/page";
 
 export default function Home() {
   return (
