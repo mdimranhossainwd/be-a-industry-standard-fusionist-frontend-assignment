@@ -17,9 +17,9 @@ import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { loginAction } from "./_action";
-
 interface LoginFormProps {
   redirectPath?: string;
 }
@@ -28,9 +28,13 @@ export default function LoginForm({ redirectPath }: LoginFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
+  // verify-email থেকে আসলে email prefill হবে
+  const searchParams = useSearchParams();
+  const prefillEmail = searchParams.get("email") || "";
+
   const form = useForm({
     defaultValues: {
-      email: "",
+      email: prefillEmail,
       password: "",
     },
 
@@ -38,18 +42,11 @@ export default function LoginForm({ redirectPath }: LoginFormProps) {
       setServerError(null);
       try {
         const result = (await loginAction(value, redirectPath)) as any;
-
         if (!result?.success) {
           setServerError(result?.message || "Login failed");
         }
       } catch (error: any) {
-        if (
-          error &&
-          typeof error === "object" &&
-          "digest" in error &&
-          typeof error.digest === "string" &&
-          error.digest.startsWith("NEXT_REDIRECT")
-        ) {
+        if (error?.digest?.startsWith("NEXT_REDIRECT")) {
           throw error;
         }
         console.log(`Login failed: ${error.message}`);
@@ -158,14 +155,12 @@ export default function LoginForm({ redirectPath }: LoginFormProps) {
             </Link>
           </div>
 
-          {/* Server Error */}
           {serverError && (
             <Alert variant="destructive">
               <AlertDescription>{serverError}</AlertDescription>
             </Alert>
           )}
 
-          {/* Submit Button */}
           <form.Subscribe
             selector={(s) => [s.canSubmit, s.isSubmitting] as const}
           >
