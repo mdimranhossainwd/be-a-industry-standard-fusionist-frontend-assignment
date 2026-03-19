@@ -236,15 +236,7 @@ export const NavbarLogo = () => {
       href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
-      <img
-        src="https://i.ibb.co.com/QjczW4vb/145855843-8e8d722b-6a0a-4da0-9ca2-3aba986f49e9-removebg-preview.png"
-        alt="logo"
-        width={30}
-        height={30}
-      />
-      <span className="font-medium text-2xl text-black dark:text-white">
-        EcoSparkHub
-      </span>
+      🌿 EcoSpark Hub
     </Link>
   );
 };
