@@ -1,14 +1,15 @@
-"use client";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";
 import TopPicksSection from "@/components/layout/newsletter";
 import HeroSection from "@/components/pages/hero";
+import { getUserInfo } from "@/services/auth.services";
 import IdeaCardDemo from "./all-ideas/page";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getUserInfo();
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <Header />
+      <Header user={user} />
 
       <section className="py-20 text-center">
         <div className="mx-auto max-w-3xl px-4">

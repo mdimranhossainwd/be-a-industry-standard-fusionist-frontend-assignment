@@ -19,50 +19,33 @@ import {
   NavBody,
   NavItems,
 } from "@/components/ui/resizable-navbar";
+// import { logoutAction } from "@/services/authActions"; // আপনার path
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { useState } from "react";
 import { Button } from "../ui/button";
-// import { ModeToggle } from "@/components/ui/ModeToggle";
 
 type User = {
   id: string;
   email: string;
   name: string;
-  role: "STUDENT" | "TUTOR" | "ADMIN";
+  role: "MEMBER" | "ADMIN";
   createdAt: string;
   updatedAt: string;
-};
+} | null;
 
-export function Header() {
+export function Header({ user }: { user: User }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("user");
-
-  //   if (storedUser) {
-  //     try {
-  //       setUser(JSON.parse(storedUser) as User);
-  //     } catch (err) {
-  //       console.error("Failed to parse user from localStorage", err);
-  //       setUser(null);
-  //     }
-  //   }
-  // }, []);
 
   const navItems = [
     { name: "Home", link: "/" },
-    { name: "All Ideas", link: "/all-ideas" },
+    { name: "All Tutors", link: "/tutors" },
     { name: "Blog", link: "/blog" },
   ];
 
   if (user) {
     switch (user.role) {
-      case "STUDENT":
+      case "MEMBER":
         navItems.push({ name: "Dashboard", link: "/dashboard" });
-        break;
-      case "TUTOR":
-        navItems.push({ name: "Dashboard", link: "/tutor/dashboard" });
         break;
       case "ADMIN":
         navItems.push({ name: "Dashboard", link: "/admin" });
@@ -77,18 +60,18 @@ export function Header() {
 
   if (user) {
     switch (user.role) {
-      case "STUDENT":
+      case "MEMBER":
         dropdownMenuItem.link = "/dashboard";
-        break;
-      case "TUTOR":
-        dropdownMenuItem.link = "/tutor/dashboard";
-
         break;
       case "ADMIN":
         dropdownMenuItem.link = "/admin";
         break;
     }
   }
+
+  // const handleLogout = async () => {
+  //   await logoutAction();
+  // };
 
   return (
     <Navbar>
@@ -109,7 +92,7 @@ export function Header() {
                       >
                         <Avatar>
                           <AvatarFallback className="font-bold text-primary">
-                            {user.name.charAt(0)}
+                            {user?.name?.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                       </Button>

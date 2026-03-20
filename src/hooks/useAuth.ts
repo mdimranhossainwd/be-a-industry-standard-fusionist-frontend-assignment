@@ -1,11 +1,30 @@
 "use client";
 
-import { authService } from "@/lib/services";
-import type { User } from "@/types/api.types";
+import { getUserInfo } from "@/services/auth.services";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export function useAuth(requiredRole?: "STUDENT" | "TUTOR" | "ADMIN") {
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: "MEMBER" | "ADMIN";
+  image?: string;
+  emailVerified: boolean;
+  status: string;
+  isDeleted: boolean;
+};
+
+const getDashboardRoute = (role: string) => {
+  switch (role) {
+    case "ADMIN":
+      return "/admin";
+    default:
+      return "/dashboard";
+  }
+};
+
+export function useAuth(requiredRole?: "MEMBER" | "ADMIN") {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -13,12 +32,7 @@ export function useAuth(requiredRole?: "STUDENT" | "TUTOR" | "ADMIN") {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (!authService.isAuthenticated()) {
-          router.push("/login");
-          return;
-        }
-
-        const currentUser = authService.getCurrentUser();
+        const currentUser = await getUserInfo();
 
         if (!currentUser) {
           router.push("/login");
@@ -26,13 +40,7 @@ export function useAuth(requiredRole?: "STUDENT" | "TUTOR" | "ADMIN") {
         }
 
         if (requiredRole && currentUser.role !== requiredRole) {
-          if (currentUser.role === "ADMIN") {
-            router.push("/admin");
-          } else if (currentUser.role === "TUTOR") {
-            router.push("/tutor/dashboard");
-          } else {
-            router.push("/dashboard");
-          }
+          router.push(getDashboardRoute(currentUser.role));
           return;
         }
 

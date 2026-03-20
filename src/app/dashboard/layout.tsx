@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 
 export default function StudentLayout({
@@ -9,7 +9,7 @@ export default function StudentLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth("STUDENT");
+  const { user, loading } = useAuth("MEMBER");
 
   if (loading) {
     return (
