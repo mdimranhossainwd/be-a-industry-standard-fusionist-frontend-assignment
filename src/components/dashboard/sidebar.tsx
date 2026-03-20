@@ -3,7 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 // import { logoutAction } from "@/services/authActions";
-import { Calendar, Home, LogOut, Menu, Settings, User, X } from "lucide-react";
+import {
+  FilePlus,
+  Home,
+  LightbulbIcon,
+  LogOut,
+  Menu,
+  Settings,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -14,14 +23,14 @@ interface SidebarProps {
 
 const memberLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/dashboard/bookings", label: "My Bookings", icon: Calendar },
-  { href: "/dashboard/profile", label: "Profile", icon: User },
+  { href: "/dashboard/create-idea", label: "Create-Idea", icon: FilePlus },
+  { href: "/dashboard/my-ideas", label: "My Ideas", icon: LightbulbIcon },
 ];
 
 const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
   { href: "/admin/users", label: "Users", icon: User },
-  { href: "/admin/bookings", label: "Bookings", icon: Calendar },
+  { href: "/admin/all-ideas", label: "All Ideas", icon: LightbulbIcon },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
