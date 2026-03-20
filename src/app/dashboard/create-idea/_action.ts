@@ -47,6 +47,15 @@ export async function createIdeaAction(
   }
 }
 
+export async function getIdeaByIdAction(id: string): Promise<Idea | null> {
+  try {
+    const res = await httpClient.get<Idea>(`/ideas/${id}`);
+    return unwrap(res);
+  } catch {
+    return null;
+  }
+}
+
 // ─── Update idea ──────────────────────────────────────────────────────────────
 
 export async function updateIdeaAction(
@@ -62,7 +71,7 @@ export async function updateIdeaAction(
   }
 
   try {
-    const res = await httpClient.patch<Idea>(`/ideas/${id}`, parsed.data);
+    const res = await httpClient.put<Idea>(`/ideas/${id}`, parsed.data);
     const idea = unwrap(res);
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/my-ideas");
