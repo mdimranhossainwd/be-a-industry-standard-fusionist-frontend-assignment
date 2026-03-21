@@ -2,11 +2,21 @@ import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";
 import TopPicksSection from "@/components/layout/newsletter";
 import HeroSection from "@/components/pages/hero";
+import { IdeaCard } from "@/components/tutors/tutor-card";
 import { getUserInfo } from "@/services/auth.services";
-import IdeaCardDemo from "./all-ideas/page";
+import { Idea } from "@/types/api.types";
+import { getIdeasAction } from "./_action";
 
 export default async function Home() {
   const user = await getUserInfo();
+  const data: Idea[] = await getIdeasAction();
+
+  const highlightedIdeas: Idea[] = data.data?.filter(
+    (idea) => idea.isHighlighted === true,
+  );
+
+  console.log(highlightedIdeas);
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <Header user={user} />
@@ -66,7 +76,19 @@ export default async function Home() {
         </div>
       </section>
 
-      <IdeaCardDemo />
+      <section className="container mx-auto">
+        <h1 className="mb-5 font-serif text-[clamp(2rem,6vw,5rem)] font-black leading-[.95] text-center tracking-tight text-[#1a1a1a]">
+          Featured <span className="italic text-[#2d5a27]">spark</span> Idea
+        </h1>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 py-8">
+          {highlightedIdeas?.map((idea) => (
+            <IdeaCard key={idea.id} idea={idea} />
+          ))}
+        </div>
+      </section>
+
+      {/* <IdeaCardDemo /> */}
 
       <TopPicksSection />
 

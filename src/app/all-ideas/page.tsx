@@ -1,6 +1,5 @@
 "use client";
 
-import { Header } from "@/components/layout/navbar";
 import { IdeaCard } from "@/components/tutors/tutor-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -745,7 +744,7 @@ export default function AllIdeasPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
-      <Header />
+      {/* <Header /> */}
 
       {/* ── Hero Section ── */}
       <section className="relative pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-12 md:pb-16 bg-gradient-to-br from-emerald-600 via-teal-600 to-green-700 overflow-hidden">
