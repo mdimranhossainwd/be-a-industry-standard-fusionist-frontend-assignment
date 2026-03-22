@@ -79,7 +79,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
         <CardContent className="p-0 flex flex-col h-full">
           {/* Thumbnail / Image Area */}
           <div className="relative w-full h-36 sm:h-40 md:h-44 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-hidden shrink-0">
-            {idea.images && idea.images.length > 0 ? (
+            {idea.images ? (
               <Image
                 src={idea.images[0]}
                 alt={idea.title}
@@ -183,10 +183,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
             </div>
 
             {/* View Button */}
-            <Link
-              href={`/ideas/${idea.slug ?? idea.id}`}
-              className="block mt-1 sm:mt-2"
-            >
+            <Link href={`/all-ideas/${idea.id}`} className="block mt-1 sm:mt-2">
               <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 gap-1.5">
                 <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 {isPaid ? "Unlock Idea" : "View Idea"}
