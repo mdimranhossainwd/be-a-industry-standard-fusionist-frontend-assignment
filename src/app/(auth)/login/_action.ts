@@ -26,6 +26,7 @@ export const loginAction = async (
       message: firstError,
     };
   }
+
   try {
     const response = await httpClient.post<ILoginResponse>(
       "/auth/login",
@@ -34,19 +35,15 @@ export const loginAction = async (
 
     const { accessToken, refreshToken, token, user } = response.data;
     const { role, emailVerified, needPasswordChange, email } = user;
+
     await setTokenInCookies("accessToken", accessToken);
     await setTokenInCookies("refreshToken", refreshToken);
-    await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60); // 1 day in seconds
-
-    // if(!emailVerified){
-    //     redirect("/verify-email");
-    // }else // in the catch block
+    await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
 
     if (needPasswordChange) {
-      //TODO : refactoring
       redirect(`/reset-password?email=${email}`);
     } else {
-      // redirect(redirectPath || "/dashboard");
+      // ✅ already decoded হয়ে আসছে LoginForm থেকে, তাই শুধু validate করো
       const targetPath =
         redirectPath && isValidRedirectForRole(redirectPath, role as UserRole)
           ? redirectPath
@@ -56,6 +53,7 @@ export const loginAction = async (
     }
   } catch (error: any) {
     console.log(error, "error");
+
     if (
       error &&
       typeof error === "object" &&
@@ -73,6 +71,7 @@ export const loginAction = async (
     ) {
       redirect(`/verify-email?email=${payload.email}`);
     }
+
     return {
       success: false,
       message: `Login failed: ${error.message}`,

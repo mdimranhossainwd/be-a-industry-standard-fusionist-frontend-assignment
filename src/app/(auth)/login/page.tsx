@@ -24,15 +24,20 @@ interface LoginFormProps {
   redirectPath?: string;
 }
 
-export default function LoginForm({ redirectPath }: LoginFormProps) {
+export default function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   // verify-email থেকে আসলে email prefill হবে
   const searchParams = useSearchParams();
   const prefillEmail = searchParams.get("email") || "";
+const rawRedirectPath = searchParams.get("redirectPath");
+  const redirectPath = rawRedirectPath
+    ? decodeURIComponent(rawRedirectPath)
+    : undefined;
+ 
 
-  const form = useForm({
+    const form = useForm({
     defaultValues: {
       email: prefillEmail,
       password: "",
@@ -41,6 +46,7 @@ export default function LoginForm({ redirectPath }: LoginFormProps) {
     onSubmit: async ({ value }: { value: ILoginPayload }) => {
       setServerError(null);
       try {
+        // ✅ decoded redirectPath pass করা হচ্ছে
         const result = (await loginAction(value, redirectPath)) as any;
         if (!result?.success) {
           setServerError(result?.message || "Login failed");
@@ -49,11 +55,11 @@ export default function LoginForm({ redirectPath }: LoginFormProps) {
         if (error?.digest?.startsWith("NEXT_REDIRECT")) {
           throw error;
         }
-        console.log(`Login failed: ${error.message}`);
         setServerError(`Login failed: ${error.message}`);
       }
     },
   });
+
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
