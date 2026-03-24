@@ -8,8 +8,8 @@ import {
   Home,
   LightbulbIcon,
   LogOut,
+  Mail,
   Menu,
-  Settings,
   User,
   X,
 } from "lucide-react";
@@ -31,7 +31,7 @@ const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
   { href: "/admin/users", label: "Users", icon: User },
   { href: "/admin/all-ideas", label: "All Ideas", icon: LightbulbIcon },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 export function Sidebar({ role }: SidebarProps) {
