@@ -30,6 +30,18 @@ export interface NewsletterLog {
   status: "SUCCESS" | "PARTIAL" | "FAILED";
 }
 
+// ─── Create subscriber ────────────────────────────────────────────────────────
+
+export const createSubscriberAction = async (email: string) => {
+  try {
+    await httpClient.post("/newsletter/subscribe", { email });
+    // revalidatePath("/admin/newsletter");
+    return { success: true, message: "Subscriber added!" };
+  } catch (error) {
+    return { success: false, message: "Failed to add subscriber." };
+  }
+};
+
 // ─── Get all subscribers ──────────────────────────────────────────────────────
 
 export const getSubscribersAction = async () => {

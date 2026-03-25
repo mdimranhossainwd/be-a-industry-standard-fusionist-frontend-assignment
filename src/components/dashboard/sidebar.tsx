@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-// import { logoutAction } from "@/services/authActions";
+import { logout } from "@/services/auth.services";
 import {
+  FilePen,
   FilePlus,
   Home,
   LightbulbIcon,
@@ -14,8 +15,8 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 
 interface SidebarProps {
   role: "MEMBER" | "ADMIN";
@@ -30,17 +31,27 @@ const memberLinks = [
 const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
   { href: "/admin/users", label: "Users", icon: User },
+  { href: "/admin/categories", label: "Categories", icon: FilePen },
   { href: "/admin/all-ideas", label: "All Ideas", icon: LightbulbIcon },
   { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const links = role === "ADMIN" ? adminLinks : memberLinks;
 
   const closeSidebar = () => setIsOpen(false);
+
+  function handleLogout() {
+    startTransition(async () => {
+      await logout();
+      router.push("/login");
+    });
+  }
 
   return (
     <>
@@ -68,24 +79,28 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out flex flex-col h-full",
+          "fixed inset-y-0 left-0 z-40 w-64 border-r flex flex-col h-screen bg-[#059669]",
+          "lg:sticky lg:top-0",
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          "transform transition-transform duration-300 ease-in-out",
         )}
       >
-        <div className="p-6">
+        {/* Logo */}
+        <div className="p-6 shrink-0">
           <Link
             href="/"
-            className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent"
+            className="text-2xl font-bold text-white"
             onClick={closeSidebar}
           >
             EcoSpark Hub
           </Link>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-emerald-100/80 mt-1">
             {role === "ADMIN" ? "Admin" : "Member"} Dashboard
           </p>
         </div>
 
-        <nav className="flex-1 px-4">
+        {/* Nav links — scrollable if too many */}
+        <nav className="flex-1 px-4 overflow-y-auto">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -96,30 +111,31 @@ export function Sidebar({ role }: SidebarProps) {
                 href={link.href}
                 onClick={closeSidebar}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors",
+                  "flex items-center gap-3 px-4 py-3 rounded-lg mb-1.5 transition-colors text-[14px]",
                   isActive
-                    ? "bg-blue-50 text-blue-600 font-medium"
-                    : "text-gray-600 hover:bg-gray-50",
+                    ? "bg-white/20 text-white font-semibold"
+                    : "text-emerald-50/90 hover:bg-white/10 hover:text-white",
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-5 w-5 shrink-0" />
                 {link.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t mt-auto">
-          <form>
-            <Button
-              type="submit"
-              variant="ghost"
-              className="w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50 cursor-pointer"
-            >
-              <LogOut className="h-5 w-5 mr-3" />
-              Logout
-            </Button>
-          </form>
+        {/* Logout — always pinned to bottom */}
+        <div className="shrink-0 p-4 border-t border-white/20">
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isPending}
+            onClick={handleLogout}
+            className="w-full justify-start text-emerald-50/90 hover:text-white hover:bg-white/10 cursor-pointer disabled:opacity-60"
+          >
+            <LogOut className="h-5 w-5 mr-3" />
+            {isPending ? "Logging out…" : "Logout"}
+          </Button>
         </div>
       </div>
     </>

@@ -20,8 +20,10 @@ import {
   NavItems,
 } from "@/components/ui/resizable-navbar";
 // import { logoutAction } from "@/services/authActions"; // আপনার path
+import { logout } from "@/services/auth.services";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { Button } from "../ui/button";
 
 type User = {
@@ -35,10 +37,11 @@ type User = {
 
 export function Header({ user }: { user: User }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const navItems = [
     { name: "Home", link: "/" },
-    { name: "All Tutors", link: "/tutors" },
+    { name: "All Ideas", link: "/all-ideas" },
     { name: "Blog", link: "/blog" },
   ];
 
@@ -67,6 +70,13 @@ export function Header({ user }: { user: User }) {
         dropdownMenuItem.link = "/admin";
         break;
     }
+  }
+
+  function handleLogout() {
+    startTransition(async () => {
+      await logout();
+      router.push("/");
+    });
   }
 
   // const handleLogout = async () => {
@@ -111,7 +121,7 @@ export function Header({ user }: { user: User }) {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem
-                          // onClick={handleLogout}
+                          onClick={handleLogout}
                           variant="destructive"
                           className="cursor-pointer"
                         >
@@ -204,6 +214,8 @@ export function Header({ user }: { user: User }) {
                             // onClick={handleLogout}
                             variant="destructive"
                             className="cursor-pointer"
+                            // disabled={isPending}
+                            onClick={handleLogout}
                           >
                             Log out
                           </DropdownMenuItem>

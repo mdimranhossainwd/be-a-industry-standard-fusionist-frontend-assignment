@@ -38,7 +38,7 @@ const SORT_OPTIONS = [
   { value: "commented", label: "Most Commented" },
 ];
 
-const PER_PAGE = 9;
+const PER_PAGE = 4;
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface AllIdeasClientProps {
@@ -121,6 +121,8 @@ function IdeasSidebar({
 
   const [catOpen, setCatOpen] = useState(false);
   const selectedCat = categories.find((c) => c.slug === filters.categorySlug);
+
+  console.log(selectedCat);
 
   const SORT_ICONS: Record<string, React.ReactNode> = {
     recent: <Clock className="h-3.5 w-3.5" />,
@@ -435,6 +437,7 @@ export function AllIdeasClient({
   const [loading] = useState(false);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  console.log(categories);
 
   const [filters, setFilters] = useState({
     search: "",
@@ -449,6 +452,7 @@ export function AllIdeasClient({
   const filtered = ideas?.data
     ?.filter((idea) => {
       const q = filters.search.toLowerCase();
+      // console.log(filtered);
 
       const matchSearch =
         !q ||
@@ -459,6 +463,8 @@ export function AllIdeasClient({
       // ✅ slug দিয়ে category match করো
       const matchCategory =
         !filters.categorySlug || idea.category?.slug === filters.categorySlug;
+
+      console.log(matchCategory);
 
       const matchPayment =
         filters.paymentStatus === "all" ||

@@ -1,37 +1,51 @@
-const TOP_PICKS = [
-  {
-    category: "Energy",
-    icon: "⚡",
-    title: "Floating Solar on Canals",
-    description:
-      "The most-loved idea of the season — combining irrigation infrastructure with clean energy generation at massive scale.",
-    votes: "1,240",
-    author: "by Tanvir Khan",
-    color: "#9ce56d",
-  },
-  {
-    category: "Waste",
-    icon: "♻️",
-    title: "Jute Biodegradable Packaging",
-    description:
-      "Eliminating plastic from Dhaka's largest market districts with locally-sourced jute packaging that costs 20% less.",
-    votes: "876",
-    author: "by Nafisa Sultana",
-    color: "#6fd3a4",
-  },
-  {
-    category: "Transport",
-    icon: "🚍",
-    title: "Solar Rickshaw Hubs",
-    description:
-      "Transforming thousands of livelihoods by making clean transport economically viable for daily wage workers.",
-    votes: "654",
-    author: "by Masud Rana",
-    color: "#7fd3ff",
-  },
-];
+import { httpClient } from "@/lib/axios/httpClient";
+import { IdeaProfile } from "@/types/api.types";
 
-export default function TopPicksSection() {
+// ─── Server-side fetch ────────────────────────────────────────────────────────
+
+async function getTopIdeas(): Promise<IdeaProfile[]> {
+  try {
+    const res = await httpClient.get<{ data: { data: IdeaProfile[] } }>(
+      "/ideas",
+      {
+        params: {
+          status: "APPROVED",
+          sortBy: "votes",
+          sortOrder: "desc",
+          limit: 3,
+          page: 1,
+        },
+      },
+    );
+    // handle both shapes: { data: IdeaProfile[] } or { data: { data: IdeaProfile[] } }
+    const payload = res.data.data as unknown;
+    if (
+      payload &&
+      typeof payload === "object" &&
+      "data" in (payload as object) &&
+      Array.isArray((payload as { data: unknown }).data)
+    ) {
+      return (payload as { data: IdeaProfile[] }).data.slice(0, 3);
+    }
+    if (Array.isArray(payload)) return (payload as IdeaProfile[]).slice(0, 3);
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+// ─── Color palette for cards ──────────────────────────────────────────────────
+
+const CARD_COLORS = ["#9ce56d", "#6fd3a4", "#7fd3ff"];
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default async function TopPicksSection() {
+  const ideas = await getTopIdeas();
+
+  // Fallback: nothing to show
+  if (ideas.length === 0) return null;
+
   return (
     <section className="bg-[#0f1116] py-20 relative overflow-hidden">
       <div className="absolute -top-16 left-1/4 w-72 h-72 bg-[#2d5a27]/20 rounded-full blur-3xl pointer-events-none" />
@@ -44,9 +58,9 @@ export default function TopPicksSection() {
               🏆 TOP VOTED
             </p>
             <h2 className="font-black leading-tight text-[clamp(2rem,4vw,3rem)]">
-              <span className="text-white">The community's</span>
+              <span className="text-white">The community&apos;s</span>
               <br />
-              <span className="text-[#4caf50]">top 3 picks</span>
+              <span className="text-[#4caf50]">top {ideas.length} picks</span>
             </h2>
           </div>
           <p className="text-[#b0b0b0] text-xs sm:text-sm max-w-md">
@@ -55,52 +69,72 @@ export default function TopPicksSection() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-          {TOP_PICKS.map((pick, i) => (
-            <div
-              key={pick.title}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 hover:bg-white/10 transition-all duration-300"
-            >
-              <div className="absolute -right-1 top-0 text-white/10 text-[6rem] leading-none font-black pointer-events-none select-none">
-                {String(i + 1).padStart(2, "0")}
-              </div>
+          {ideas.map((idea, i) => {
+            const color = CARD_COLORS[i] ?? CARD_COLORS[0];
+            const votes = idea._count?.votes ?? 0;
+            const categoryName = idea.category?.name ?? "General";
+            const authorName = idea.author?.name
+              ? `by ${idea.author.name}`
+              : "";
 
-              <div className="relative z-10 flex items-center justify-between mb-3">
-                <span
-                  className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"
-                  style={{ color: pick.color }}
-                >
-                  {pick.icon} {pick.category}
-                </span>
-                <span className="text-[#888] text-xl font-black opacity-80">
-                  #{i + 1}
-                </span>
-              </div>
+            return (
+              <div
+                key={idea.id}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 hover:bg-white/10 transition-all duration-300"
+              >
+                {/* Background rank number */}
+                <div className="absolute -right-1 top-0 text-white/10 text-[6rem] leading-none font-black pointer-events-none select-none">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
 
-              <h3 className="relative z-10 text-white text-[1.06rem] sm:text-xl font-bold leading-snug mb-2">
-                {pick.title}
-              </h3>
-              <p className="relative z-10 text-[#c0c0c0] text-xs sm:text-[12px] leading-relaxed mb-5">
-                {pick.description}
-              </p>
-
-              <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-3">
-                <div>
-                  <div
-                    className="text-2xl sm:text-3xl font-black"
-                    style={{ color: pick.color }}
+                {/* Category + rank */}
+                <div className="relative z-10 flex items-center justify-between mb-3">
+                  <span
+                    className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"
+                    style={{ color }}
                   >
-                    {pick.votes}
-                  </div>
-                  <div className="text-[10px] uppercase font-semibold tracking-[0.2em] text-[#999] mt-0.5">
-                    upvotes
-                  </div>
+                    {categoryName}
+                  </span>
+                  <span className="text-[#888] text-xl font-black opacity-80">
+                    #{i + 1}
+                  </span>
                 </div>
-                <div className="text-[#aaa] text-[11px] sm:text-xs">
-                  {pick.author}
+
+                {/* Title */}
+                <h3 className="relative z-10 text-white text-[1.06rem] sm:text-xl font-bold leading-snug mb-2 line-clamp-2">
+                  {idea.title}
+                </h3>
+
+                {/* Description */}
+                <p className="relative z-10 text-[#c0c0c0] text-xs sm:text-[12px] leading-relaxed mb-5 line-clamp-3">
+                  {idea.description ??
+                    idea.proposedSolution ??
+                    idea.problemStatement ??
+                    ""}
+                </p>
+
+                {/* Footer */}
+                <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-3">
+                  <div>
+                    <div
+                      className="text-2xl sm:text-3xl font-black"
+                      style={{ color }}
+                    >
+                      {votes.toLocaleString()}
+                    </div>
+                    <div className="text-[10px] uppercase font-semibold tracking-[0.2em] text-[#999] mt-0.5">
+                      upvotes
+                    </div>
+                  </div>
+                  {authorName && (
+                    <div className="text-[#aaa] text-[11px] sm:text-xs">
+                      {authorName}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

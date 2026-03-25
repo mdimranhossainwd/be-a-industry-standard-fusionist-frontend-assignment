@@ -113,3 +113,22 @@ export async function deleteIdeaAction(
     return { success: false, error: message };
   }
 }
+
+// ─── Toggle highlight ─────────────────────────────────────────────────────────
+
+export async function toggleHighlightAction(
+  id: string,
+  isHighlighted: boolean,
+): Promise<{ success: true } | { success: false; error: string }> {
+  if (!id) return { success: false, error: "Invalid idea ID" };
+
+  try {
+    await httpClient.patch(`/ideas/${id}/highlight`, { isHighlighted });
+    revalidatePath("/admin/ideas");
+    return { success: true };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Failed to update highlight";
+    return { success: false, error: message };
+  }
+}

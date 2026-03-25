@@ -46,6 +46,7 @@ import {
   ShieldCheck,
   Trash2,
   UserCheck,
+  UserCog,
   Users,
 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
@@ -55,6 +56,7 @@ import {
   AdminUserSummary,
   deleteUserAction,
   getUsersAction,
+  updateUserRoleAction,
   updateUserStatusAction,
   type UserRole,
 } from "./_action";
@@ -124,7 +126,7 @@ export default function AdminUsersPage() {
 
   const [actioningId, setActioningId] = useState<string | null>(null);
   const [actionType, setActionType] = useState<
-    "block" | "unblock" | "delete" | null
+    "block" | "unblock" | "delete" | "role" | null
   >(null);
 
   const [blockTarget, setBlockTarget] = useState<AdminUserSummary | null>(null);
@@ -134,6 +136,11 @@ export default function AdminUsersPage() {
   const [deleteTarget, setDeleteTarget] = useState<AdminUserSummary | null>(
     null,
   );
+
+  // Role change state
+  const [roleChangeTarget, setRoleChangeTarget] =
+    useState<AdminUserSummary | null>(null);
+  const [pendingRole, setPendingRole] = useState<UserRole | null>(null);
 
   // ── Load ────────────────────────────────────────────────────────────────
 
@@ -235,6 +242,36 @@ export default function AdminUsersPage() {
       }
       setAllUsers((prev) => prev.filter((u) => u.id !== id));
       toast.success(`${deleteTarget.name} has been deleted.`);
+    });
+  }
+
+  // Role change: triggered when admin picks a new role from the inline Select
+  function handleRoleSelectChange(user: AdminUserSummary, newRole: UserRole) {
+    if (newRole === user.role) return;
+    setRoleChangeTarget(user);
+    setPendingRole(newRole);
+  }
+
+  function handleRoleChange() {
+    if (!roleChangeTarget || !pendingRole) return;
+    const id = roleChangeTarget.id;
+    const targetName = roleChangeTarget.name;
+    setActioningId(id);
+    setActionType("role");
+    startActioning(async () => {
+      const result = await updateUserRoleAction(id, pendingRole);
+      setRoleChangeTarget(null);
+      setPendingRole(null);
+      setActioningId(null);
+      setActionType(null);
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
+      setAllUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, role: pendingRole } : u)),
+      );
+      toast.success(`${targetName}'s role updated to ${pendingRole}.`);
     });
   }
 
@@ -378,10 +415,10 @@ export default function AdminUsersPage() {
         {/* Table */}
         <div className="rounded-lg border overflow-hidden">
           <div className="overflow-x-auto">
-            <Table className="min-w-[640px]">
+            <Table className="min-w-[700px]">
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
-                  <TableHead className="text-[12px] font-semibold py-2.5 w-[35%]">
+                  <TableHead className="text-[12px] font-semibold py-2.5 w-[32%]">
                     User
                   </TableHead>
                   <TableHead className="text-[12px] font-semibold py-2.5">
@@ -440,7 +477,6 @@ export default function AdminUsersPage() {
                     const isBusy = actioningId === user.id && isActioning;
                     const isBlocked = user.status === "BLOCKED";
                     const isAdmin = user.role === "ADMIN";
-                    const roleCfg = ROLE_CONFIG[user.role];
                     const statusCfg =
                       STATUS_CONFIG[user.status] ?? STATUS_CONFIG.ACTIVE;
 
@@ -475,16 +511,50 @@ export default function AdminUsersPage() {
                           </div>
                         </TableCell>
 
-                        {/* Role */}
+                        {/* Role — inline Select for non-admins, protected badge for admins */}
                         <TableCell className="py-3">
-                          <Badge
-                            className={cn(
-                              "text-[11px] font-medium px-2 py-0.5",
-                              roleCfg.className,
-                            )}
-                          >
-                            {roleCfg.label}
-                          </Badge>
+                          {isAdmin ? (
+                            <Badge
+                              className={cn(
+                                "text-[11px] font-medium px-2 py-0.5",
+                                ROLE_CONFIG.ADMIN.className,
+                              )}
+                            >
+                              {ROLE_CONFIG.ADMIN.label}
+                            </Badge>
+                          ) : (
+                            <Select
+                              value={user.role}
+                              disabled={isActioning}
+                              onValueChange={(v) =>
+                                handleRoleSelectChange(user, v as UserRole)
+                              }
+                            >
+                              <SelectTrigger
+                                className={cn(
+                                  "h-7 w-28 text-[11px] font-medium border px-2 gap-1",
+                                  ROLE_CONFIG[user.role].className,
+                                  "focus:ring-1 focus:ring-offset-0",
+                                )}
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem
+                                  value="MEMBER"
+                                  className="text-[12px]"
+                                >
+                                  Member
+                                </SelectItem>
+                                <SelectItem
+                                  value="ADMIN"
+                                  className="text-[12px]"
+                                >
+                                  Admin
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
                         </TableCell>
 
                         {/* Status */}
@@ -754,6 +824,62 @@ export default function AdminUsersPage() {
               {isActioning && actionType === "delete"
                 ? "Deleting…"
                 : "Delete permanently"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Role change confirm */}
+      <AlertDialog
+        open={!!roleChangeTarget}
+        onOpenChange={(o) =>
+          !isActioning &&
+          !o &&
+          (setRoleChangeTarget(null), setPendingRole(null))
+        }
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[15px]">
+              Change user role?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[13px]">
+              <span className="font-medium text-foreground">
+                {roleChangeTarget?.name}
+              </span>{" "}
+              ({roleChangeTarget?.email}) will be changed from{" "}
+              <span className="font-medium text-foreground">
+                {roleChangeTarget?.role}
+              </span>{" "}
+              to{" "}
+              <span className="font-medium text-foreground">{pendingRole}</span>
+              .{" "}
+              {pendingRole === "ADMIN"
+                ? "This will grant them full admin privileges."
+                : "This will remove their admin privileges."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={isActioning}
+              className="h-8 text-[13px]"
+              onClick={() => setPendingRole(null)}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="h-8 text-[13px] gap-1.5 bg-violet-600 hover:bg-violet-700 text-white"
+              onClick={handleRoleChange}
+              disabled={isActioning}
+            >
+              {isActioning && actionType === "role" ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <UserCog className="w-3.5 h-3.5" />
+              )}
+              {isActioning && actionType === "role"
+                ? "Updating…"
+                : "Confirm role change"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

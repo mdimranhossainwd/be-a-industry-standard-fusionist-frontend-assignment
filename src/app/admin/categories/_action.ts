@@ -1,8 +1,8 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { revalidatePath } from "next/cache";
 import { Category } from "@/types/api.types";
+import { revalidatePath } from "next/cache";
 
 function unwrap<T>(res: { data: T }): T {
   return res.data;
@@ -16,7 +16,9 @@ export async function getCategoriesAction(): Promise<Category[]> {
 export async function createCategoryAction(payload: {
   name: string;
   slug: string;
-}): Promise<{ success: true; data: Category } | { success: false; error: string }> {
+}): Promise<
+  { success: true; data: Category } | { success: false; error: string }
+> {
   if (!payload.name.trim()) {
     return { success: false, error: "Category name is required" };
   }
@@ -39,7 +41,7 @@ export async function createCategoryAction(payload: {
 }
 
 export async function deleteCategoryAction(
-  id: string
+  id: string,
 ): Promise<{ success: true } | { success: false; error: string }> {
   if (!id) return { success: false, error: "Invalid category ID" };
 
