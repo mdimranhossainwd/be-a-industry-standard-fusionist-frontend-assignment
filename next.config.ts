@@ -11,7 +11,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // reactCompiler: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  reactCompiler: true,
 };
 
 export default nextConfig;

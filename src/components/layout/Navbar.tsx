@@ -42,6 +42,7 @@ export function Header({ user }: { user: User }) {
   const navItems = [
     { name: "Home", link: "/" },
     { name: "All Ideas", link: "/all-ideas" },
+    { name: "About us", link: "/about-us" },
     { name: "Blog", link: "/blog" },
   ];
 
@@ -78,10 +79,6 @@ export function Header({ user }: { user: User }) {
       router.push("/");
     });
   }
-
-  // const handleLogout = async () => {
-  //   await logoutAction();
-  // };
 
   return (
     <Navbar>

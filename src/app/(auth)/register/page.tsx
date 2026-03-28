@@ -64,7 +64,7 @@ export default function RegisterForm() {
             Create an account
           </CardTitle>
           <CardDescription className="text-center">
-            Join SkillBridge and start your learning journey
+            Join EcoSpark and start your learning journey
           </CardDescription>
         </CardHeader>
 
@@ -166,7 +166,7 @@ export default function RegisterForm() {
               {([canSubmit, isSubmitting]) => (
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-violet-600 cursor-pointer mt-3"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white cursor-pointer mt-3"
                   disabled={!canSubmit || isSubmitting}
                 >
                   {isSubmitting ? (

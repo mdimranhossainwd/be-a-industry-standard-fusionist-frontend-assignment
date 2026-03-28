@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container px-4 md:px-6 mx-auto grid md:grid-cols-4 gap-8">
         <div className="space-y-4">
           <h3 className="font-bold text-lg flex items-center gap-2">
-            <span className="text-black">SkillBridge</span>
+            <span className="text-black">🌿 EcoSpark Hub</span>
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Empowering learners and educators worldwide through seamless
@@ -17,13 +17,13 @@ export default function Footer() {
           <h4 className="font-semibold mb-4">Platform</h4>
           <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
             <li>
-              <Link href="/tutors" className="hover:text-blue-600">
-                Find Tutors
+              <Link href="/ideas" className="hover:text-blue-600">
+                Find Ideas
               </Link>
             </li>
             <li>
               <Link href="/register?role=tutor" className="hover:text-blue-600">
-                Become a Tutor
+                Become a Member
               </Link>
             </li>
             <li>
@@ -84,7 +84,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container px-4 md:px-6 mx-auto mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} SkillBridge. All rights reserved.
+        © {new Date().getFullYear()} 🌿 EcoSpark Hub. All rights reserved.
       </div>
     </footer>
   );

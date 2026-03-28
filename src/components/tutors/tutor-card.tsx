@@ -81,7 +81,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
           <div className="relative w-full h-36 sm:h-40 md:h-44 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-hidden shrink-0">
             {idea.images ? (
               <Image
-                src={idea.images[0]}
+                src={idea.images}
                 alt={idea.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"

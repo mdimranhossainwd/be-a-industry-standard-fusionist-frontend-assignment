@@ -3,6 +3,14 @@
 
 // app/ideas/[id]/_components/IdeaDetailsClient.tsx
 
+import {
+  createCommentAction,
+  createPaymentSessionAction,
+  createVoteAction,
+  deleteCommentAction,
+  deleteVoteAction,
+  getVotesAction,
+} from "@/app/_action"; // ← adjust import path as needed
 import { IdeaProfile } from "@/types/api.types";
 import {
   AlertTriangle,
@@ -60,8 +68,6 @@ interface Props {
   currentUser: CurrentUser | null;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const formatDate = (iso: string) =>
@@ -82,7 +88,7 @@ const timeAgo = (iso: string) => {
 };
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
-// Hero section — on top of emerald/teal gradient
+
 const H = {
   text: "rgba(255,255,255,1)",
   textMuted: "rgba(255,255,255,0.65)",
@@ -97,7 +103,6 @@ const H = {
   featText: "#fef9c3",
 };
 
-// Body section — on top of white/gray background
 const B = {
   text: "#111827",
   textSecond: "#374151",
@@ -417,9 +422,10 @@ export default function IdeaDetailsClient({ idea, currentUser }: Props) {
     }));
   });
   const [commentText, setCommentText] = useState("");
-  const [replyTo, setReplyTo] = useState<{ id: string; author: string } | null>(
-    null,
-  );
+  const [replyTo, setReplyTo] = useState<{
+    id: string;
+    author: string;
+  } | null>(null);
   const [submittingComment, setSubmittingComment] = useState(false);
   const [votingLoading, setVotingLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -431,32 +437,25 @@ export default function IdeaDetailsClient({ idea, currentUser }: Props) {
 
   // ── Fetch votes ────────────────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${BASE_URL}/votes/${idea.id}`, { credentials: "include" })
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.data) setVotes(d.data);
-      })
+    getVotesAction(idea.id)
+      .then((data) => setVotes(data))
       .catch(() => {});
   }, [idea.id]);
 
-
   // ── Payment success/cancel URL parameter handle ────────────────────────────
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const paymentStatus = params.get("payment");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get("payment");
 
-  if (paymentStatus === "success") {
-    // URL থেকে query param সরাও, page reload করো
-    window.history.replaceState({}, "", window.location.pathname);
-    window.location.reload(); // idea এর isLocked false হয়ে যাবে
-  }
+    if (paymentStatus === "success") {
+      window.history.replaceState({}, "", window.location.pathname);
+      window.location.reload();
+    }
 
-  if (paymentStatus === "cancelled") {
-    window.history.replaceState({}, "", window.location.pathname);
-  }
-}, []);
-
-  // ── Fetch comments ─────────────────────────────────────────────────────────
+    if (paymentStatus === "cancelled") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   // ── Vote ───────────────────────────────────────────────────────────────────
   const handleVote = async (type: "UPVOTE" | "DOWNVOTE") => {
@@ -467,13 +466,11 @@ useEffect(() => {
     if (votingLoading) return;
     setVoteError(null);
     setVotingLoading(true);
+
     try {
       if (votes.userVote === type) {
-        const res = await fetch(`${BASE_URL}/votes/${idea.id}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error();
+        // Toggle off — remove vote
+        await deleteVoteAction(idea.id);
         setVotes((v) => ({
           ...v,
           upvotes: type === "UPVOTE" ? v.upvotes - 1 : v.upvotes,
@@ -481,16 +478,8 @@ useEffect(() => {
           userVote: null,
         }));
       } else {
-        const res = await fetch(`${BASE_URL}/votes/${idea.id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ type }),
-        });
-        if (!res.ok) {
-          const e = await res.json();
-          throw new Error(e.message ?? "Vote failed");
-        }
+        // Add / switch vote
+        await createVoteAction(idea.id, type);
         setVotes((v) => ({
           upvotes:
             type === "UPVOTE"
@@ -508,7 +497,7 @@ useEffect(() => {
         }));
       }
     } catch (e: any) {
-      setVoteError(e.message ?? "Something went wrong");
+      setVoteError(e?.message ?? "Something went wrong");
     } finally {
       setVotingLoading(false);
     }
@@ -518,32 +507,30 @@ useEffect(() => {
   const handleComment = async () => {
     if (!commentText.trim() || !isLoggedIn || submittingComment) return;
     setSubmittingComment(true);
+
     try {
-      const res = await fetch(`${BASE_URL}/comments/${idea.id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          content: commentText.trim(),
-          parentId: replyTo?.id ?? undefined,
-        }),
+      const data = await createCommentAction(idea.id, {
+        content: commentText.trim(),
+        parentId: replyTo?.id ?? undefined,
       });
-      const d = await res.json();
-      if (d.data) {
+
+      if (data) {
         if (replyTo) {
           setComments((prev) =>
             prev.map((c) =>
               c.id === replyTo.id
-                ? { ...c, replies: [...(c.replies ?? []), d.data] }
+                ? { ...c, replies: [...(c.replies ?? []), data] }
                 : c,
             ),
           );
         } else {
-          setComments((prev) => [{ ...d.data, replies: [] }, ...prev]);
+          setComments((prev) => [{ ...data, replies: [] }, ...prev]);
         }
         setCommentText("");
         setReplyTo(null);
       }
+    } catch {
+      // Silently fail — could add toast here
     } finally {
       setSubmittingComment(false);
     }
@@ -551,11 +538,8 @@ useEffect(() => {
 
   // ── Delete comment ─────────────────────────────────────────────────────────
   const handleDeleteComment = async (commentId: string) => {
-    const res = await fetch(`${BASE_URL}/comments/${commentId}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (res.ok) {
+    try {
+      await deleteCommentAction(commentId);
       setComments((prev) =>
         prev
           .filter((c) => c.id !== commentId)
@@ -564,25 +548,25 @@ useEffect(() => {
             replies: c.replies?.filter((r) => r.id !== commentId) ?? [],
           })),
       );
+    } catch {
+      // Silently fail — could add toast here
     }
   };
 
+  // ── Reply ──────────────────────────────────────────────────────────────────
   const handleReply = (parentId: string, parentAuthor: string) => {
     setReplyTo({ id: parentId, author: parentAuthor });
     setTimeout(() => commentRef.current?.focus(), 80);
   };
 
+  // ── Copy link ──────────────────────────────────────────────────────────────
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const netScore = votes.upvotes - votes.downvotes;
-
-  // ── locked section এ এই function যোগ করো ─────────────────────────────────
-
-
+  // ── Purchase ───────────────────────────────────────────────────────────────
   const handlePurchase = async () => {
     if (!isLoggedIn) {
       window.location.href = `/login?redirect=/all-ideas/${idea.id}`;
@@ -591,27 +575,22 @@ useEffect(() => {
 
     setPurchaseLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ ideaId: idea.id }),
-      });
-
-      const d = await res.json();
-
-      if (d.data?.url) {
-        // ✅ এই line এই সব কাজ করে — Stripe page এ redirect
-        window.location.href = d.data.url;
+      const { url } = await createPaymentSessionAction(idea.id);
+      if (url) {
+        window.location.href = url;
       } else {
-        alert(d.message ?? "Payment failed. Try again.");
+        alert("Payment failed. Try again.");
       }
-    } catch {
-      alert("Something went wrong. Please try again.");
+    } catch (e: any) {
+      alert(e?.message ?? "Something went wrong. Please try again.");
     } finally {
       setPurchaseLoading(false);
     }
   };
+
+  const netScore = votes.upvotes - votes.downvotes;
+
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div
       style={{
@@ -620,9 +599,9 @@ useEffect(() => {
         background: "#f3f4f6",
       }}
     >
-      {/* ══════════════════════════════════════════════════════════════════ */}
-      {/* HERO — gradient background, ALL text white                        */}
-      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/* ════════════════════════════════════════════════════════════════ */}
+      {/* HERO                                                             */}
+      {/* ════════════════════════════════════════════════════════════════ */}
       <div
         className="relative overflow-hidden"
         style={{
@@ -630,7 +609,6 @@ useEffect(() => {
             "linear-gradient(135deg, #059669 0%, #0d9488 50%, #16a34a 100%)",
         }}
       >
-        {/* Blurred image backdrop */}
         {heroImage && (
           <div
             className="absolute inset-0"
@@ -644,7 +622,6 @@ useEffect(() => {
           />
         )}
 
-        {/* Gradient overlay — keeps text readable regardless of image */}
         <div
           className="absolute inset-0"
           style={{
@@ -653,7 +630,6 @@ useEffect(() => {
           }}
         />
 
-        {/* Dot grid texture */}
         <div
           className="absolute inset-0"
           style={{
@@ -665,7 +641,6 @@ useEffect(() => {
         />
 
         <div className="relative max-w-6xl mx-auto px-6 pt-10 pb-28">
-          {/* Back */}
           <a
             href="/ideas"
             className="group"
@@ -686,9 +661,7 @@ useEffect(() => {
           </a>
 
           <div className="grid lg:grid-cols-5 gap-12 items-end">
-            {/* ── Left: text ─────────────────────────────────────────────── */}
             <div className="lg:col-span-3">
-              {/* Badges */}
               <div
                 style={{
                   display: "flex",
@@ -762,7 +735,6 @@ useEffect(() => {
                 )}
               </div>
 
-              {/* Title — always white on gradient */}
               <h1
                 style={{
                   fontSize: "clamp(26px, 4.5vw, 48px)",
@@ -777,7 +749,6 @@ useEffect(() => {
                 {idea.title}
               </h1>
 
-              {/* Meta row — muted white */}
               <div
                 style={{
                   display: "flex",
@@ -787,7 +758,11 @@ useEffect(() => {
                 }}
               >
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
                 >
                   <Avatar
                     name={idea.author?.name ?? "Unknown"}
@@ -844,7 +819,6 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* ── Right: hero image ─────────────────────────────────────── */}
             {heroImage && (
               <div className="lg:col-span-2">
                 <div
@@ -867,15 +841,15 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════════ */}
-      {/* BODY — light gray background, dark text                           */}
-      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/* ════════════════════════════════════════════════════════════════ */}
+      {/* BODY                                                             */}
+      {/* ════════════════════════════════════════════════════════════════ */}
       <div
         className="max-w-6xl mx-auto px-6 pb-24"
         style={{ marginTop: "40px" }}
       >
         <div className="grid lg:grid-cols-12 gap-6">
-          {/* ── Vote Rail ─────────────────────────────────────────────────── */}
+          {/* ── Vote Rail ─────────────────────────────────────────────── */}
           <div className="hidden lg:flex lg:col-span-1 flex-col items-center pt-4">
             <div className="sticky top-24 flex flex-col items-center gap-1">
               <button
@@ -1019,7 +993,7 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* ── Main Content ───────────────────────────────────────────────── */}
+          {/* ── Main Content ───────────────────────────────────────────── */}
           <div
             className="lg:col-span-8"
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
@@ -1034,7 +1008,7 @@ useEffect(() => {
               }}
             >
               {idea.isLocked ? (
-                /* ── Locked ────────────────────────────────────────────── */
+                /* ── Locked ──────────────────────────────────────────── */
                 <div style={{ padding: "64px 40px", textAlign: "center" }}>
                   <div
                     style={{
@@ -1120,7 +1094,7 @@ useEffect(() => {
                   </button>
                 </div>
               ) : (
-                /* ── Sections ──────────────────────────────────────────── */
+                /* ── Sections ────────────────────────────────────────── */
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div
                     style={{
@@ -1160,7 +1134,6 @@ useEffect(() => {
                     </SectionCard>
                   </div>
 
-                  {/* Extra images */}
                   {images.length > 1 && (
                     <div
                       style={{
@@ -1197,7 +1170,7 @@ useEffect(() => {
               )}
             </div>
 
-            {/* ── Comments ──────────────────────────────────────────────────── */}
+            {/* ── Comments ────────────────────────────────────────────── */}
             {!idea.isLocked && (
               <div
                 id="comments-section"
@@ -1209,7 +1182,6 @@ useEffect(() => {
                 }}
               >
                 <div style={{ padding: "32px" }}>
-                  {/* Header */}
                   <div
                     style={{
                       display: "flex",
@@ -1248,7 +1220,6 @@ useEffect(() => {
                     </span>
                   </div>
 
-                  {/* Input */}
                   {isLoggedIn ? (
                     <div style={{ marginBottom: "28px" }}>
                       {replyTo && (
@@ -1392,12 +1363,14 @@ useEffect(() => {
                     </div>
                   )}
 
-                  {/* Comment list */}
                   {comments.length === 0 ? (
                     <div style={{ padding: "40px 0", textAlign: "center" }}>
                       <MessageCircle
                         size={24}
-                        style={{ color: B.borderLight, margin: "0 auto 12px" }}
+                        style={{
+                          color: B.borderLight,
+                          margin: "0 auto 12px",
+                        }}
                         strokeWidth={1}
                       />
                       <p style={{ fontSize: "13px", color: B.textFaint }}>
@@ -1429,7 +1402,7 @@ useEffect(() => {
             )}
           </div>
 
-          {/* ── Sidebar ────────────────────────────────────────────────────── */}
+          {/* ── Sidebar ───────────────────────────────────────────────── */}
           <div
             className="lg:col-span-3"
             style={{
@@ -1515,7 +1488,11 @@ useEffect(() => {
                 Author
               </p>
               <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
               >
                 <Avatar
                   name={idea.author?.name ?? "Unknown"}
@@ -1524,7 +1501,11 @@ useEffect(() => {
                 />
                 <div>
                   <p
-                    style={{ fontSize: "14px", fontWeight: 600, color: B.text }}
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: B.text,
+                    }}
                   >
                     {idea.author?.name}
                   </p>

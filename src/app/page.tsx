@@ -31,10 +31,18 @@ export default async function Home() {
             </span>
           </div>
 
-          {/* Headline */}
-          <h1 className="mb-5 font-serif text-[clamp(2.8rem,6vw,5rem)] font-black leading-[.95] tracking-tight text-[#1a1a1a]">
-            Ideas that <span className="italic text-[#2d5a27]">spark</span> real
-            change
+          <h1
+            className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
+text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
+          >
+            Ideas that{" "}
+            <span
+              className="italic bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 
+  bg-clip-text text-transparent"
+            >
+              spark
+            </span>{" "}
+            real change
           </h1>
 
           {/* Subtext */}
@@ -45,7 +53,7 @@ export default async function Home() {
 
           {/* Buttons */}
           <div className="mb-14 flex flex-wrap justify-center gap-3">
-            <button className="rounded-full bg-[#2d5a27] px-7 py-3 text-sm font-semibold text-white hover:bg-[#1f3e1b] transition-colors">
+            <button className="rounded-full px-7 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 gap-1.5">
               Explore Ideas →
             </button>
             <button className="rounded-full border border-[#c8c4bc] px-7 py-3 text-sm font-medium text-[#1a1a1a] hover:border-[#2d5a27] hover:text-[#2d5a27] transition-colors">
@@ -77,8 +85,18 @@ export default async function Home() {
       </section>
 
       <section className="container mx-auto">
-        <h1 className="mb-5 font-serif text-[clamp(2rem,6vw,5rem)] font-black leading-[.95] text-center tracking-tight text-[#1a1a1a]">
-          Featured <span className="italic text-[#2d5a27]">spark</span> Idea
+        <h1
+          className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
+text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
+        >
+          Featured{" "}
+          <span
+            className="italic bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 
+  bg-clip-text text-transparent"
+          >
+            spark
+          </span>{" "}
+          Idea
         </h1>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 py-8">
