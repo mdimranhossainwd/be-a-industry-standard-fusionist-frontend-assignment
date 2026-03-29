@@ -38,7 +38,7 @@ const SORT_OPTIONS = [
   { value: "commented", label: "Most Commented" },
 ];
 
-const PER_PAGE = 4;
+const PER_PAGE = 8;
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface AllIdeasClientProps {

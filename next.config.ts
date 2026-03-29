@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -14,7 +12,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  reactCompiler: true,
-};
+} satisfies NextConfig;
 
 export default nextConfig;

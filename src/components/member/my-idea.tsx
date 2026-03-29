@@ -49,7 +49,7 @@ export function MyIdeasClient({ initialIdeas }: MyIdeasClientProps) {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             My Ideas
           </h1>
           <p className="text-[13px] text-muted-foreground mt-1 leading-snug">

@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
@@ -25,7 +25,7 @@ export default function StudentLayout({
 
   return (
     <div className="min-h-screen flex">
-      <Sidebar role="STUDENT" />
+      <Sidebar role="MEMBER" />
       <main className="flex-1 bg-gray-50 p-4 md:p-8 overflow-auto lg:ml-0">
         {children}
       </main>

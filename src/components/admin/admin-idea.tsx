@@ -46,13 +46,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Category, Idea, PaginatedIdeas } from "@/types/api.types";
 import { format } from "date-fns";
@@ -268,7 +268,7 @@ export function AdminIdeasClient({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">All ideas</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">All ideas</h1>
             <p className="text-[13px] text-muted-foreground mt-0.5">
               Manage, approve, reject, and delete ideas
             </p>

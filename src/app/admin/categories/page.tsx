@@ -1,5 +1,5 @@
 // app/admin-dashboard/categories/page.tsx — RSC
-
+export const dynamic = "force-dynamic";
 import { AdminCategoriesClient } from "@/components/admin/admin-categories";
 import { redirect } from "next/navigation";
 import { getCategoriesAction } from "./_action";

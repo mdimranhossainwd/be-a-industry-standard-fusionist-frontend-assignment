@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
