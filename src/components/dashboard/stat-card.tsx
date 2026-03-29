@@ -98,11 +98,11 @@ export function StatsGrid({ stats }: StatsGridProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 ">
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-xl bg-muted/40 border border-border/50 p-4 flex flex-col gap-3"
+          className="rounded-xl  border border-border/50 p-4 flex flex-col gap-3 bg-white"
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-medium text-muted-foreground">

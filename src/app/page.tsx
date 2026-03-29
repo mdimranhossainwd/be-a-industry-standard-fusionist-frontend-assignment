@@ -1,3 +1,4 @@
+import EcoChallengeBoard from "@/components/layout/challenge";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";
 import TopPicksSection from "@/components/layout/newsletter";
@@ -5,6 +6,7 @@ import HeroSection from "@/components/pages/hero";
 import { IdeaCard } from "@/components/tutors/tutor-card";
 import { getUserInfo } from "@/services/auth.services";
 import { Idea } from "@/types/api.types";
+import HowItWorks from "../components/layout/works";
 import { getIdeasAction } from "./_action";
 
 export default async function Home() {
@@ -106,11 +108,14 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
         </div>
       </section>
 
-      {/* <IdeaCardDemo /> */}
+      <HowItWorks />
 
       <TopPicksSection />
 
       <HeroSection />
+
+      <EcoChallengeBoard />
+
       <Footer />
     </div>
   );

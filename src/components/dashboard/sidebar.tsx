@@ -92,7 +92,7 @@ export function Sidebar({ role }: SidebarProps) {
             className="text-2xl font-bold text-white"
             onClick={closeSidebar}
           >
-            EcoSpark Hub
+            🌿 EcoSpark Hub
           </Link>
           <p className="text-sm text-emerald-100/80 mt-1">
             {role === "ADMIN" ? "Admin" : "Member"} Dashboard

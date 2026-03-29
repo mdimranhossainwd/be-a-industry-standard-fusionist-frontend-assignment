@@ -283,7 +283,7 @@ export default function AdminUsersPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-2xl font-semibold tracking-tight">
               User management
             </h1>
             <p className="text-[13px] text-muted-foreground mt-1">

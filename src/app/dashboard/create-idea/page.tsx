@@ -42,9 +42,9 @@ export default async function CreateIdeaPage({
   }
 
   return (
-    <div className="max-w-xl mx-auto py-8 px-4">
+    <div className="w-full mx-auto py-8 px-4">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-foreground">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
           {isEditMode ? "Edit idea" : "Create new idea"}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">

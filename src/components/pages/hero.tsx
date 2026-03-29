@@ -39,7 +39,13 @@ export default function HeroSection() {
         <h1 className="font-black leading-tight text-[clamp(1.5rem,5vw,3rem)] text-[#1a1a1a]">
           Stay in the
           {/* <br /> */}
-          <span className="text-[#1e7f3a]"> eco loop</span>
+          <span
+            className="italic bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 
+  bg-clip-text text-transparent"
+          >
+            {" "}
+            eco loop
+          </span>
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#55606d]">
@@ -63,7 +69,7 @@ export default function HeroSection() {
             <button
               type="submit"
               disabled={loading}
-              className="ml-2 rounded-full bg-[#1e7f3a] px-5 py-2 text-sm font-semibold text-white hover:bg-[#16612b] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="ml-6 py-2 px-8 font-medium rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 gap-1.5 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Subscribing..." : "Subscribe"}
             </button>

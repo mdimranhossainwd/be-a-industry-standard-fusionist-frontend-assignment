@@ -81,7 +81,7 @@ export function DashboardOverview({
 
       {/* ── Quick actions ─────────────────────────────────────────────── */}
       <div className="rounded-xl border bg-card p-5 space-y-3">
-        <h3 className="text-sm font-medium">Quick actions</h3>
+        <h3 className="text-lg font-semibold">Quick actions</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <Button variant="outline" className="w-full text-sm" asChild>
             <Link href="/dashboard/create-idea">Create idea</Link>

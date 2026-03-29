@@ -268,7 +268,9 @@ export function AdminIdeasClient({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">All ideas</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              All ideas Management
+            </h1>
             <p className="text-[13px] text-muted-foreground mt-0.5">
               Manage, approve, reject, and delete ideas
             </p>
