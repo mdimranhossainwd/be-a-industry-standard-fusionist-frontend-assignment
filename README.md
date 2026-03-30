@@ -4,7 +4,7 @@
 
 ---
 
-## 🌐 [Live Demo](https://your-frontend-url.vercel.app) |
+## 🌐 [Live Demo](https://be-a-industry-standard-fusionist-fr.vercel.app/) |
 
 ## ✨ Features
 
