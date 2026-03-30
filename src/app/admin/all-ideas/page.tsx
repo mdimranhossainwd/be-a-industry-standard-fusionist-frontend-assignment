@@ -1,4 +1,4 @@
-// app/admin/ideas/page.tsx — RSC
+
 
 import { getCategoriesAction } from "@/app/admin/categories/_action";
 import { AdminIdeasClient } from "@/components/admin/admin-idea";

@@ -1,5 +1,3 @@
-// components/HowItWorks.jsx
-
 const steps = [
   {
     number: "01",
@@ -69,17 +67,31 @@ const steps = [
 
 function StepCard({ number, icon, title, description }) {
   return (
-    <div className="bg-gray-50 rounded-2xl p-8 text-left border border-gray-200 hover:border-[#ddd] transition-colors">
-      <div className="flex items-center gap-4">
-        <div className="w-10 h-10 bg-[#e1f5ee] rounded-xl flex items-center justify-center mb-4">
+    <div className="group bg-gray-50 rounded-2xl p-6 md:p-8 flex items-start gap-4 text-left border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300">
+      {/* Icon */}
+      <div className="flex-shrink-0">
+        <div className="w-10 h-10 md:w-11 md:h-11 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
           {icon}
         </div>
-        <p className="text-5xl font-bold text-[#000] opacity-20 mb-3">
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col items-start text-left flex-1">
+        {/* Number */}
+        <p className="text-4xl md:text-5xl font-bold text-black/10 leading-none mb-2 w-full text-left">
           {number}
         </p>
+
+        {/* Title */}
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 w-full text-left">
+          {title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-sm text-gray-500 leading-relaxed w-full text-left">
+          {description}
+        </p>
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-500 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -92,7 +104,7 @@ export default function HowItWorks() {
       </p>
       <h1
         className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
-text-[50px] leading-[1.05] mb-6"
+md:text-[50px] text-[40px] leading-[1.05] mb-6"
       >
         How It{" "}
         <span

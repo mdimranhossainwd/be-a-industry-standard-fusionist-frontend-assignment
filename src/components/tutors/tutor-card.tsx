@@ -106,11 +106,11 @@ export function IdeaCard({ idea }: IdeaCardProps) {
                 </span>
               )}
               {/* Status */}
-              <span
+              {/* <span
                 className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border shadow-sm ${statusConfig.className}`}
               >
                 {statusConfig.label}
-              </span>
+              </span> */}
             </div>
 
             {/* Paid / Free badge top-right */}

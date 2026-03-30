@@ -1,5 +1,3 @@
-// app/(auth)/login/page.tsx
-
 import { Suspense } from "react";
 import LoginForm from "./Loginpage";
 

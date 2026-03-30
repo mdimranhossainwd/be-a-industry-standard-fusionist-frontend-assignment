@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-// app/ideas/[id]/_components/IdeaDetailsClient.tsx
-
 import {
   createCommentAction,
   createPaymentSessionAction,

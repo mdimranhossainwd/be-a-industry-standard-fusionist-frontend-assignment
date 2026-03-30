@@ -26,7 +26,7 @@ export const registerAction = async (
 
   try {
     await httpClient.post("/auth/register", parsed.data);
-    // সফল হলে verify-email এ redirect
+
     redirect(`/login?email=${encodeURIComponent(parsed.data.email)}`);
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) {

@@ -1,4 +1,4 @@
-// app/admin-dashboard/page.tsx — RSC
+
 
 import { AdminOverview } from "@/components/admin/admin-overview";
 import { redirect } from "next/navigation";

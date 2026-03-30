@@ -28,7 +28,6 @@ export default function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // verify-email থেকে আসলে email prefill হবে
   const searchParams = useSearchParams();
   const prefillEmail = searchParams.get("email") || "";
   const rawRedirectPath = searchParams.get("redirectPath");

@@ -86,7 +86,7 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
         </div>
       </section>
 
-      <section className="container mx-auto">
+      <section className="container mx-auto px-4 md:px-0">
         <h1
           className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
 text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"

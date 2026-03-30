@@ -1,7 +1,3 @@
-// app/dashboard/create-idea/page.tsx — RSC
-// Create mode:  /dashboard/create-idea
-// Edit mode:    /dashboard/create-idea?edit=<ideaId>
-
 import { CreateIdeaForm } from "@/components/member/create-idea.form";
 import { notFound, redirect } from "next/navigation";
 import { getCategoriesAction, getIdeaByIdAction } from "./_action";

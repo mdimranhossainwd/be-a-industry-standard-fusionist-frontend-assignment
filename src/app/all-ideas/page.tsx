@@ -1,5 +1,3 @@
-// app/ideas/page.tsx
-// ✅ Server Component — no "use client"
 export const dynamic = "force-dynamic";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";

@@ -1,5 +1,3 @@
-// app/ideas/[id]/page.tsx
-
 import { getIdeaByIdAction } from "@/app/_action";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/navbar";
