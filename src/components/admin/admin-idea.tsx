@@ -115,7 +115,7 @@ export function AdminIdeasClient({
   const [data, setData] = useState<PaginatedIdeas>(initialIdeas);
   const [params, setParams] = useState<AdminIdeaQueryParams>({
     page: 1,
-    limit: 2,
+    limit: 10,
     status: "ALL",
     search: "",
     category: "",
