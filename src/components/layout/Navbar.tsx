@@ -136,13 +136,13 @@ export function Header({ user }: { user: User }) {
               <>
                 <div className="flex gap-3">
                   <NavbarButton
-                    className="dark:bg-primary dark:text-white"
+                    className="dark:bg-black dark:text-white dark:border"
                     href="/login"
                   >
                     Login
                   </NavbarButton>
                   <NavbarButton
-                    className="dark:bg-primary dark:text-white"
+                    className="dark:bg-black dark:text-white dark:border "
                     href="/register"
                   >
                     Sign Up
@@ -235,13 +235,13 @@ export function Header({ user }: { user: User }) {
                 <>
                   <div className="flex gap-3 flex-col">
                     <NavbarButton
-                      className="dark:bg-primary dark:text-white"
+                      className="dark:bg-black dark:text-black"
                       href="/login"
                     >
                       Login
                     </NavbarButton>
                     <NavbarButton
-                      className="dark:bg-primary dark:text-white"
+                      className="dark:bg-black dark:text-black"
                       href="/register"
                     >
                       Sign Up

@@ -34,16 +34,16 @@ export default function NewsletterStats({ meta, logs }: Props) {
       {stats.map((s) => (
         <div
           key={s.label}
-          className={`${s.bg} ${s.border} border rounded-2xl p-5 flex items-start gap-4`}
+          className={`${s.bg} dark:bg-gray-800 ${s.border} dark:border-gray-800 border rounded-2xl p-5 flex items-start gap-4`}
         >
-          <div className={`${s.iconColor} mt-0.5`}>
+          <div className={`${s.iconColor} dark:text-white mt-0.5`}>
             <s.icon size={22} />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1 dark:text-white">
               {s.label}
             </p>
-            <p className="text-2xl font-bold text-gray-800 leading-none">
+            <p className="text-2xl font-bold text-gray-800 dark:text-white leading-none">
               {s.value}
             </p>
           </div>

@@ -30,11 +30,13 @@ const statusConfig = {
 
 export default function NewsletterLogs({ logs }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
-        <RiMailSendLine className="text-[#1a6b3c]" size={20} />
+    <div className="rounded-2xl border border-border overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3">
+        <RiMailSendLine className="text-primary" size={20} />
         <div>
-          <h3 className="font-bold text-gray-900">Send History</h3>
+          <h3 className="font-bold text-gray-900 dark:text-white">
+            Send History
+          </h3>
           <p className="text-sm text-gray-400 mt-0.5">
             Last 20 newsletter sends
           </p>
@@ -46,7 +48,7 @@ export default function NewsletterLogs({ logs }: Props) {
           No newsletter sent yet
         </div>
       ) : (
-        <div className="divide-y divide-gray-50">
+        <div className="divide-y divide-gray-50 dark:divide-gray-800">
           {logs.map((log) => {
             const config =
               statusConfig[log.status as keyof typeof statusConfig] ??
@@ -68,10 +70,10 @@ export default function NewsletterLogs({ logs }: Props) {
                   </span>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 line-clamp-1">
+                    <p className="text-sm font-medium text-gray-700 dark:text-white line-clamp-1">
                       {log.subject}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-400 dark:text-white mt-0.5">
                       {new Date(log.sentAt).toLocaleString("en-BD", {
                         day: "numeric",
                         month: "short",
@@ -84,7 +86,7 @@ export default function NewsletterLogs({ logs }: Props) {
                 </div>
 
                 <div className="text-right flex-shrink-0">
-                  <p className="text-lg font-bold text-gray-800">
+                  <p className="text-lg font-bold text-gray-800 dark:text-white">
                     {log.totalSent}
                   </p>
                   <p className="text-xs text-gray-400">sent</p>

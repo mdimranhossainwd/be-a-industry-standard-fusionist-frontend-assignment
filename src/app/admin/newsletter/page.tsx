@@ -12,14 +12,14 @@ export default async function AdminNewsletterPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-8">
+    <div className="min-h-screen p-6 md:p-8">
       {/* Page header */}
       <div className="mb-8">
         <div className="flex items-center gap-2.5 mb-2">
-          <div className="w-9 h-9 bg-[#1a6b3c] rounded-xl flex items-center justify-center">
+          <div className="w-9 h-9 bg-[#1a6b3c] dark:bg-[#1a6b3c] rounded-xl flex items-center justify-center">
             <RiLeafLine className="text-white" size={18} />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
             Newsletter Management
           </h1>
         </div>

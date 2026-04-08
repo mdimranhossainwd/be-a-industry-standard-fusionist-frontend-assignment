@@ -67,9 +67,9 @@ export default function SubscriberTable({ subscribers }: Props) {
   ];
 
   return (
-    <div className="bg-bgPrimary rounded-2xl border border-border overflow-hidden">
+    <div className="rounded-2xl border border-border overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
+      <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="font-bold text-textPrimary text-lg">Subscribers</h3>
           <p className="text-sm text-textSecondary mt-0.5">
@@ -79,10 +79,13 @@ export default function SubscriberTable({ subscribers }: Props) {
 
         {/* Search */}
         <div
-          className="flex items-center gap-2 bg-gray-50 border border-gray-200
+          className="flex items-center gap-2 border border-gray-200 dark:border-gray-800
                         rounded-full px-4 py-2 w-full sm:w-[260px]"
         >
-          <RiSearchLine className="text-textSecondary flex-shrink-0" size={15} />
+          <RiSearchLine
+            className="text-textSecondary flex-shrink-0"
+            size={15}
+          />
           <input
             type="text"
             placeholder="Search email or name…"
@@ -116,7 +119,7 @@ export default function SubscriberTable({ subscribers }: Props) {
       <div className="overflow-x-auto mt-4">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-gray-100 dark:border-gray-800">
               <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Subscriber
               </th>
@@ -160,7 +163,9 @@ export default function SubscriberTable({ subscribers }: Props) {
                         <RiUserLine className="text-emerald-600" size={14} />
                       </div>
                       <div>
-                        <p className="font-medium text-textPrimary">{sub.email}</p>
+                        <p className="font-medium text-textPrimary">
+                          {sub.email}
+                        </p>
                         {sub.user?.name && (
                           <p className="text-xs text-textSecondary mt-0.5">
                             {sub.user.name}
