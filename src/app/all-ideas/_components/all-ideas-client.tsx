@@ -17,6 +17,7 @@ import {
   MessageSquare,
   Search,
   SlidersHorizontal,
+  Sparkles,
   TrendingUp,
   UnlockIcon,
   X,
@@ -40,6 +41,16 @@ const SORT_OPTIONS = [
 
 const PER_PAGE = 8;
 
+// ─── AI Suggested Keywords ───────────────────────────────────────────────────
+const AI_SUGGESTIONS = [
+  "Solar Energy",
+  "Zero Waste",
+  "Urban Farming",
+  "Plastic Free",
+  "Circular Economy",
+  "Water Conservation",
+];
+
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface AllIdeasClientProps {
   initialIdeas: IdeaProfile[];
@@ -58,18 +69,18 @@ function FilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+    <div className="border-b border-border pb-4 last:border-0 last:pb-0">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between mb-2 group"
       >
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest group-hover:text-emerald-600 transition-colors">
+        <span className="text-xs font-bold text-textSecondary uppercase tracking-widest group-hover:text-emerald-600 transition-colors">
           {title}
         </span>
         {open ? (
-          <ChevronUp className="h-3.5 w-3.5 text-gray-400" />
+          <ChevronUp className="h-3.5 w-3.5 text-textSecondary" />
         ) : (
-          <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+          <ChevronDown className="h-3.5 w-3.5 text-textSecondary" />
         )}
       </button>
       <AnimatePresence initial={false}>
@@ -111,6 +122,8 @@ function IdeasSidebar({
 }) {
   const [localMin, setLocalMin] = useState(filters.minPrice);
   const [localMax, setLocalMax] = useState(filters.maxPrice);
+  const [catOpen, setCatOpen] = useState(false);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
 
   const hasActiveFilters =
     !!filters.categorySlug ||
@@ -119,10 +132,7 @@ function IdeasSidebar({
     filters.minPrice > 0 ||
     filters.maxPrice < 200;
 
-  const [catOpen, setCatOpen] = useState(false);
   const selectedCat = categories.find((c) => c.slug === filters.categorySlug);
-
-  console.log(selectedCat);
 
   const SORT_ICONS: Record<string, React.ReactNode> = {
     recent: <Clock className="h-3.5 w-3.5" />,
@@ -131,297 +141,303 @@ function IdeasSidebar({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden sticky top-24">
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
-          <span className="font-bold text-sm text-gray-800">Filters</span>
-          {hasActiveFilters && (
-            <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-              ON
-            </span>
-          )}
-        </div>
-        {hasActiveFilters && (
-          <button
-            onClick={() => {
-              setLocalMin(0);
-              setLocalMax(200);
-              onReset();
-            }}
-            className="text-[11px] text-emerald-600 hover:text-emerald-800 font-semibold flex items-center gap-0.5 transition-colors"
-          >
-            <X className="h-3 w-3" /> Reset all
-          </button>
-        )}
-      </div>
-
-      <div className="p-4 space-y-4">
-        {/* ── Search ── */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 pointer-events-none" />
-          <Input
-            placeholder="Search ideas…"
-            value={filters.search}
-            onChange={(e) => onChange("search", e.target.value)}
-            className="pl-8 h-9 text-sm border-gray-200 focus-visible:ring-emerald-500 bg-gray-50"
-          />
-          {filters.search && (
-            <button
-              onClick={() => onChange("search", "")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-
-        {/* ── Sort By ── */}
-        <FilterSection title="Sort By">
-          <div className="flex flex-col gap-1 mt-1">
-            {SORT_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => onChange("sort", opt.value)}
-                className={`text-left text-sm px-3 py-2 rounded-xl transition-all flex items-center gap-2.5 ${
-                  filters.sort === opt.value
-                    ? "bg-emerald-500 text-white font-semibold shadow-sm"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                <span
-                  className={
-                    filters.sort === opt.value ? "text-white" : "text-gray-400"
-                  }
-                >
-                  {SORT_ICONS[opt.value]}
-                </span>
-                {opt.label}
-              </button>
-            ))}
+    <div className="space-y-4 sticky top-24">
+      <div className="bg-bgPrimary dark:bg-bgSecondary rounded-2xl border border-border shadow-sm overflow-hidden">
+        {/* ── Header ── */}
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-border bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+            <span className="font-bold text-sm text-textPrimary">Filters</span>
+            {hasActiveFilters && (
+              <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                ON
+              </span>
+            )}
           </div>
-        </FilterSection>
-
-        {/* ── Category Dropdown ── */}
-        <FilterSection title="Category">
-          <div className="relative mt-1">
+          {hasActiveFilters && (
             <button
-              onClick={() => setCatOpen(!catOpen)}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:border-emerald-300 transition-colors text-sm"
+              onClick={() => {
+                setLocalMin(0);
+                setLocalMax(200);
+                onReset();
+              }}
+              className="text-[11px] text-emerald-600 hover:text-emerald-800 font-semibold flex items-center gap-0.5 transition-colors"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                {selectedCat ? (
-                  <>
-                    <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{
-                        backgroundColor: selectedCat.color ?? "#10b981",
-                      }}
-                    />
-                    <span className="font-medium text-gray-800 truncate">
-                      {selectedCat.name}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-gray-500">All Categories</span>
-                )}
-              </div>
-              <ChevronDown
-                className={`h-3.5 w-3.5 text-gray-400 shrink-0 transition-transform ${
-                  catOpen ? "rotate-180" : ""
-                }`}
-              />
+              <X className="h-3 w-3" /> Reset all
             </button>
+          )}
+        </div>
 
+        <div className="p-4 space-y-4">
+          {/* ── Search with AI Suggestions ── */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-textSecondary pointer-events-none" />
+            <Input
+              placeholder="Search ideas…"
+              value={filters.search}
+              onFocus={() => setShowAiSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowAiSuggestions(false), 200)}
+              onChange={(e) => onChange("search", e.target.value)}
+              className="pl-8 h-9 text-sm border-border focus-visible:ring-emerald-500 bg-bgSecondary"
+            />
+            {filters.search && (
+              <button
+                onClick={() => onChange("search", "")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-textSecondary hover:text-textPrimary"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+
+            {/* AI Suggestions Dropdown */}
             <AnimatePresence>
-              {catOpen && (
+              {showAiSuggestions && (
                 <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute z-20 top-full mt-1.5 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="absolute z-30 top-full mt-1.5 left-0 right-0 bg-bgPrimary border border-border rounded-xl shadow-xl p-2"
                 >
-                  <button
-                    onClick={() => {
-                      onChange("categorySlug", "");
-                      setCatOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                      !filters.categorySlug
-                        ? "bg-emerald-50 text-emerald-700 font-semibold"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    <span className="w-2.5 h-2.5 rounded-full bg-gray-300 shrink-0" />
-                    All Categories
-                  </button>
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => {
-                        onChange("categorySlug", cat.slug); // ✅ slug দিয়ে match
-                        setCatOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                        filters.categorySlug === cat.slug
-                          ? "bg-emerald-50 text-emerald-700 font-semibold"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: cat.color ?? "#10b981" }}
-                      />
-                      {cat.name}
-                    </button>
-                  ))}
+                  <p className="text-[10px] font-bold text-emerald-600 px-2 py-1 flex items-center gap-1.5 mb-1 text-left">
+                    <Sparkles className="h-3 w-3" /> AI TRENDING SUGGESTIONS
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {AI_SUGGESTIONS.filter((s) =>
+                      s.toLowerCase().includes(filters.search.toLowerCase()),
+                    ).map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => onChange("search", s)}
+                        className="text-[11px] px-2 py-1 rounded-lg bg-bgSecondary border border-border hover:border-emerald-500 hover:bg-emerald-50 transition-all text-textSecondary hover:text-emerald-700"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-        </FilterSection>
 
-        {/* ── Access Type ── */}
-        <FilterSection title="Access Type">
-          <div className="grid grid-cols-3 gap-1.5 mt-1">
-            {[
-              { value: "all", label: "All", icon: null },
-              {
-                value: "free",
-                label: "Free",
-                icon: <UnlockIcon className="h-3 w-3" />,
-              },
-              {
-                value: "paid",
-                label: "Paid",
-                icon: <Lock className="h-3 w-3" />,
-              },
-            ].map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => onChange("paymentStatus", opt.value)}
-                className={`flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl border text-xs font-semibold transition-all ${
-                  filters.paymentStatus === opt.value
-                    ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
-                    : "border-gray-200 text-gray-600 hover:border-emerald-300 hover:bg-emerald-50"
-                }`}
-              >
-                {opt.icon && (
+          <FilterSection title="Sort By">
+            <div className="flex flex-col gap-1 mt-1">
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => onChange("sort", opt.value)}
+                  className={`text-left text-sm px-3 py-2 rounded-xl transition-all flex items-center gap-2.5 ${
+                    filters.sort === opt.value
+                      ? "bg-emerald-500 text-white font-semibold shadow-sm"
+                      : "text-textSecondary hover:bg-bgSecondary"
+                  }`}
+                >
                   <span
                     className={
-                      filters.paymentStatus === opt.value
+                      filters.sort === opt.value
                         ? "text-white"
-                        : "text-gray-400"
+                        : "text-textSecondary"
                     }
                   >
-                    {opt.icon}
+                    {SORT_ICONS[opt.value]}
                   </span>
-                )}
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </FilterSection>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </FilterSection>
 
-        {/* ── Price Range (only when Paid is selected) ── */}
-        <AnimatePresence>
-          {filters.paymentStatus === "paid" && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <FilterSection title="Price Range ($)" defaultOpen={true}>
-                <div className="mt-3 px-1 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg">
-                      ${localMin}
-                    </span>
-                    <div className="flex-1 mx-2 h-px bg-gray-200" />
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg">
-                      ${localMax === 200 ? "200+" : localMax}
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-400 font-medium">
-                      Min Price
-                    </label>
-                    <input
-                      type="range"
-                      min={0}
-                      max={200}
-                      step={5}
-                      value={localMin}
-                      onChange={(e) => {
-                        const v = Number(e.target.value);
-                        if (v <= localMax) setLocalMin(v);
-                      }}
-                      onMouseUp={() => onPriceChange(localMin, localMax)}
-                      onTouchEnd={() => onPriceChange(localMin, localMax)}
-                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-emerald-500"
-                      style={{
-                        background: `linear-gradient(to right, #e5e7eb ${(localMin / 200) * 100}%, #10b981 ${(localMin / 200) * 100}%, #10b981 ${(localMax / 200) * 100}%, #e5e7eb ${(localMax / 200) * 100}%)`,
-                      }}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-400 font-medium">
-                      Max Price
-                    </label>
-                    <input
-                      type="range"
-                      min={0}
-                      max={200}
-                      step={5}
-                      value={localMax}
-                      onChange={(e) => {
-                        const v = Number(e.target.value);
-                        if (v >= localMin) setLocalMax(v);
-                      }}
-                      onMouseUp={() => onPriceChange(localMin, localMax)}
-                      onTouchEnd={() => onPriceChange(localMin, localMax)}
-                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-emerald-500"
-                      style={{
-                        background: `linear-gradient(to right, #e5e7eb ${(localMin / 200) * 100}%, #10b981 ${(localMin / 200) * 100}%, #10b981 ${(localMax / 200) * 100}%, #e5e7eb ${(localMax / 200) * 100}%)`,
-                      }}
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {[
-                      { label: "Under $20", min: 0, max: 20 },
-                      { label: "$20–$50", min: 20, max: 50 },
-                      { label: "$50+", min: 50, max: 200 },
-                    ].map((preset) => (
-                      <button
-                        key={preset.label}
-                        onClick={() => {
-                          setLocalMin(preset.min);
-                          setLocalMax(preset.max);
-                          onPriceChange(preset.min, preset.max);
+          {/* ── Category Dropdown ── */}
+          <FilterSection title="Category">
+            <div className="relative mt-1">
+              <button
+                onClick={() => setCatOpen(!catOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-border bg-bgSecondary hover:border-emerald-300 transition-colors text-sm"
+              >
+                <div className="flex items-center gap-2 min-w-0 text-left">
+                  {selectedCat ? (
+                    <>
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: selectedCat.color ?? "#10b981",
                         }}
-                        className={`text-[10px] font-semibold px-2 py-1 rounded-full border transition-all ${
-                          localMin === preset.min && localMax === preset.max
-                            ? "bg-emerald-500 text-white border-emerald-500"
-                            : "border-gray-200 text-gray-500 hover:border-emerald-300 hover:text-emerald-600"
+                      />
+                      <span className="font-medium text-textPrimary truncate">
+                        {selectedCat.name}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-textSecondary">All Categories</span>
+                  )}
+                </div>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 text-textSecondary shrink-0 transition-transform ${
+                    catOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence>
+                {catOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute z-20 top-full mt-1.5 left-0 right-0 bg-bgPrimary border border-border rounded-xl shadow-lg overflow-hidden"
+                  >
+                    <button
+                      onClick={() => {
+                        onChange("categorySlug", "");
+                        setCatOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors text-left ${
+                        !filters.categorySlug
+                          ? "bg-emerald-50 text-emerald-700 font-semibold"
+                          : "text-textSecondary"
+                      }`}
+                    >
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-300 shrink-0" />
+                      All Categories
+                    </button>
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => {
+                          onChange("categorySlug", cat.slug);
+                          setCatOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors text-left ${
+                          filters.categorySlug === cat.slug
+                            ? "bg-emerald-50 text-emerald-700 font-semibold"
+                            : "text-textSecondary"
                         }`}
                       >
-                        {preset.label}
+                        <span
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: cat.color ?? "#10b981" }}
+                        />
+                        {cat.name}
                       </button>
                     ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </FilterSection>
+
+          {/* ── Access Type ── */}
+          <FilterSection title="Access Type">
+            <div className="grid grid-cols-3 gap-1.5 mt-1">
+              {[
+                { value: "all", label: "All", icon: null },
+                {
+                  value: "free",
+                  label: "Free",
+                  icon: <UnlockIcon className="h-3 w-3" />,
+                },
+                {
+                  value: "paid",
+                  label: "Paid",
+                  icon: <Lock className="h-3 w-3" />,
+                },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => onChange("paymentStatus", opt.value)}
+                  className={`flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl border text-xs font-semibold transition-all ${
+                    filters.paymentStatus === opt.value
+                      ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
+                      : "border-border text-textSecondary hover:border-emerald-300 hover:bg-emerald-50"
+                  }`}
+                >
+                  {opt.icon && (
+                    <span
+                      className={
+                        filters.paymentStatus === opt.value
+                          ? "text-white"
+                          : "text-textSecondary"
+                      }
+                    >
+                      {opt.icon}
+                    </span>
+                  )}
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </FilterSection>
+
+          {/* ── Price Range ── */}
+          <AnimatePresence>
+            {filters.paymentStatus === "paid" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <FilterSection title="Price Range ($)">
+                  <div className="space-y-4 mt-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-textPrimary px-1">
+                      <span>${localMin}</span>
+                      <span>${localMax === 200 ? "200+" : localMax}</span>
+                    </div>
+                    <div className="px-1">
+                      <input
+                        type="range"
+                        min={0}
+                        max={200}
+                        step={5}
+                        value={localMax}
+                        onChange={(e) => {
+                          const v = Number(e.target.value);
+                          if (v >= localMin) setLocalMax(v);
+                        }}
+                        onMouseUp={() => onPriceChange(localMin, localMax)}
+                        className="w-full h-1.5 bg-bgSecondary border border-border rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                      />
+                    </div>
                   </div>
-                </div>
-              </FilterSection>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </FilterSection>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
+
+      {/* ── AI Personalized Card ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-4 text-white shadow-lg overflow-hidden relative"
+      >
+        <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2 text-left">
+            <Sparkles className="h-4 w-4 text-emerald-200" />
+            <h4 className="text-[10px] font-bold tracking-widest uppercase">
+              Smart Suggestion
+            </h4>
+          </div>
+          <p className="text-[11px] leading-relaxed font-medium mb-3 text-left">
+            Based on current sustainability trends, the community is looking for
+            more
+            <span className="text-emerald-200 font-bold ml-1">
+              Electric Vehicle
+            </span>{" "}
+            ideas.
+          </p>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="w-full bg-white/20 hover:bg-white/30 text-white border-0 h-8 text-[11px] font-bold"
+            onClick={() => onChange("search", "Electric Vehicle")}
+          >
+            Explore EV Ideas
+          </Button>
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -514,7 +530,7 @@ export function AllIdeasClient({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-bgSecondary to-bgPrimary">
       {/* ── Hero Section ── */}
       <section className="relative pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-12 md:pb-16 bg-gradient-to-br from-emerald-600 via-teal-600 to-green-700 overflow-hidden">
         <div className="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
@@ -552,7 +568,7 @@ export function AllIdeasClient({
           <div className="lg:hidden mb-3 sm:mb-4 md:mb-6">
             <Button
               onClick={() => setShowFilters(!showFilters)}
-              className="w-full bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 h-10 sm:h-11 text-sm"
+              className="w-full bg-bgPrimary text-textSecondary border border-border hover:bg-bgSecondary h-10 sm:h-11 text-sm"
             >
               <Filter className="h-4 w-4 mr-2" />
               {showFilters ? "Hide Filters" : "Show Filters"}
@@ -631,15 +647,15 @@ export function AllIdeasClient({
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-10 sm:py-12 md:py-20 bg-white rounded-2xl shadow-sm border border-gray-100 mx-1 sm:mx-2 md:mx-0"
+                  className="text-center py-10 sm:py-12 md:py-20 bg-bgPrimary rounded-2xl shadow-sm border border-border mx-1 sm:mx-2 md:mx-0"
                 >
                   <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
                     <Filter className="h-8 w-8 sm:h-10 sm:w-10 text-emerald-500" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-textPrimary mb-2">
                     No ideas found
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-500 mb-4">
+                  <p className="text-xs sm:text-sm text-textSecondary mb-4">
                     Try adjusting your filters to see more results
                   </p>
                   <Button
@@ -653,14 +669,14 @@ export function AllIdeasClient({
               ) : (
                 <>
                   {/* Result count */}
-                  <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
+                  <p className="text-xs sm:text-sm text-textSecondary mb-3 sm:mb-4">
                     Showing{" "}
-                    <span className="font-semibold text-gray-700">
+                    <span className="font-semibold text-textPrimary">
                       {(page - 1) * PER_PAGE + 1}–
                       {Math.min(page * PER_PAGE, filtered.length)}
                     </span>{" "}
                     of{" "}
-                    <span className="font-semibold text-gray-700">
+                    <span className="font-semibold text-textPrimary">
                       {filtered.length}
                     </span>{" "}
                     ideas
@@ -689,7 +705,7 @@ export function AllIdeasClient({
                         variant="outline"
                         onClick={() => setPage(page - 1)}
                         disabled={page === 1}
-                        className="border-gray-200 hover:bg-gray-50 w-full sm:w-auto min-w-[100px]"
+                        className="border-border hover:bg-bgSecondary w-full sm:w-auto min-w-[100px]"
                       >
                         Previous
                       </Button>
@@ -706,7 +722,7 @@ export function AllIdeasClient({
                             className={
                               p === page
                                 ? "bg-gradient-to-r from-emerald-600 to-teal-600 min-w-[40px] text-white border-0"
-                                : "border-gray-200 hover:bg-gray-50 min-w-[40px]"
+                                : "border-border hover:bg-bgSecondary min-w-[40px]"
                             }
                           >
                             {p}
@@ -717,7 +733,7 @@ export function AllIdeasClient({
                         variant="outline"
                         onClick={() => setPage(page + 1)}
                         disabled={page === totalPages}
-                        className="border-gray-200 hover:bg-gray-50 w-full sm:w-auto min-w-[100px]"
+                        className="border-border hover:bg-bgSecondary w-full sm:w-auto min-w-[100px]"
                       >
                         Next
                       </Button>

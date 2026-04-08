@@ -1,6 +1,6 @@
 import { getIdeaByIdAction } from "@/app/_action";
-import Footer from "@/components/layout/footer";
-import { Header } from "@/components/layout/navbar";
+import Footer from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Navbar";
 import { getUserInfo } from "@/services/auth.services";
 import { notFound } from "next/navigation";
 import IdeaDetailsClient from "./_components/idea-details";

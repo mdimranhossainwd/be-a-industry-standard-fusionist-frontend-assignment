@@ -88,42 +88,42 @@ const timeAgo = (iso: string) => {
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
 const H = {
-  text: "rgba(255,255,255,1)",
-  textMuted: "rgba(255,255,255,0.65)",
-  textFaint: "rgba(255,255,255,0.4)",
-  badge: "rgba(255,255,255,0.18)",
-  badgeBorder: "rgba(255,255,255,0.28)",
-  paidBg: "rgba(251,191,36,0.22)",
+  text: "#ffffff",
+  textMuted: "rgba(255,255,255,0.75)",
+  textFaint: "rgba(255,255,255,0.5)",
+  badge: "rgba(255,255,255,0.15)",
+  badgeBorder: "rgba(255,255,255,0.25)",
+  paidBg: "rgba(251,191,36,0.25)",
   paidBorder: "rgba(251,191,36,0.45)",
   paidText: "#fef3c7",
-  featBg: "rgba(250,204,21,0.18)",
-  featBorder: "rgba(250,204,21,0.35)",
+  featBg: "rgba(250,204,21,0.2)",
+  featBorder: "rgba(250,204,21,0.4)",
   featText: "#fef9c3",
 };
 
 const B = {
-  text: "#111827",
-  textSecond: "#374151",
-  textMuted: "#6b7280",
-  textFaint: "#9ca3af",
-  border: "#e5e7eb",
-  borderLight: "#f3f4f6",
-  surface: "#ffffff",
-  surfaceAlt: "#f9fafb",
-  divider: "#f9fafb",
+  text: "var(--text-primary)",
+  textSecond: "var(--text-secondary)",
+  textMuted: "var(--muted-foreground)",
+  textFaint: "oklch(0.556 0 0 / 60%)",
+  border: "var(--border)",
+  borderLight: "oklch(1 0 0 / 10%)",
+  surface: "var(--bg-primary)",
+  surfaceAlt: "var(--bg-secondary)",
+  divider: "var(--border)",
   upActive: "#059669",
-  upActiveBg: "#f0fdf4",
+  upActiveBg: "oklch(0.05 0.1 150 / 10%)",
   upBorder: "#bbf7d0",
   downActive: "#dc2626",
-  downActiveBg: "#fef2f2",
+  downActiveBg: "oklch(0.1 0.1 20 / 10%)",
   downBorder: "#fecaca",
-  inactive: "#d1d5db",
-  inactiveTxt: "#9ca3af",
-  green: "#059669",
-  amber: "#d97706",
-  blue: "#0891b2",
+  inactive: "oklch(0.5 0 0 / 30%)",
+  inactiveTxt: "var(--muted-foreground)",
+  green: "#10b981",
+  amber: "#f59e0b",
+  blue: "#3b82f6",
   red: "#ef4444",
-  btnGrad: "linear-gradient(135deg, #059669 0%, #0f766e 100%)",
+  btnGrad: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
 };
 
 // ─── Avatar ───────────────────────────────────────────────────────────────────
@@ -591,10 +591,10 @@ export default function IdeaDetailsClient({ idea, currentUser }: Props) {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div
+      className="min-h-screen"
       style={{
-        minHeight: "100vh",
         fontFamily: "'DM Sans','Helvetica Neue',sans-serif",
-        background: "#f3f4f6",
+        background: "var(--bg-secondary)",
       }}
     >
       {/* ════════════════════════════════════════════════════════════════ */}
@@ -1013,15 +1013,15 @@ export default function IdeaDetailsClient({ idea, currentUser }: Props) {
                       width: 52,
                       height: 52,
                       margin: "0 auto 20px",
-                      background: "#fffbeb",
-                      border: "1px solid #fde68a",
+                      background: "oklch(0.9 0.1 80 / 15%)",
+                      border: "1px solid oklch(0.9 0.1 80 / 30%)",
                       borderRadius: "12px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
-                    <Lock size={22} style={{ color: "#d97706" }} />
+                    <Lock size={22} style={{ color: B.amber }} />
                   </div>
                   <h3
                     style={{
@@ -1228,11 +1228,11 @@ export default function IdeaDetailsClient({ idea, currentUser }: Props) {
                             justifyContent: "space-between",
                             padding: "8px 12px",
                             marginBottom: "8px",
-                            background: "#f0fdf4",
-                            border: "1px solid #bbf7d0",
+                            background: "oklch(0.8 0.1 150 / 15%)",
+                            border: "1px solid oklch(0.8 0.1 150 / 30%)",
                             borderRadius: "8px",
                             fontSize: "12px",
-                            color: "#16a34a",
+                            color: B.green,
                           }}
                         >
                           <span

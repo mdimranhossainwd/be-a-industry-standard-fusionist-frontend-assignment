@@ -16,19 +16,19 @@ interface IdeaCardProps {
 const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   DRAFT: {
     label: "Draft",
-    className: "bg-gray-100 text-gray-600 border-gray-200",
+    className: "bg-bgSecondary text-textSecondary border-border",
   },
   UNDER_REVIEW: {
     label: "Under Review",
-    className: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    className: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
   },
   APPROVED: {
     label: "Approved",
-    className: "bg-green-50 text-green-700 border-green-200",
+    className: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
   },
   REJECTED: {
     label: "Rejected",
-    className: "bg-red-50 text-red-700 border-red-200",
+    className: "bg-red-500/10 text-red-600 border-red-500/20",
   },
 };
 
@@ -70,15 +70,13 @@ export function IdeaCard({ idea }: IdeaCardProps) {
       className="h-full"
     >
       <Card
-        className={`hover:shadow-2xl transition-all duration-300 overflow-hidden group h-full flex flex-col ${
-          isHighlighted
-            ? "border-emerald-400 ring-1 ring-emerald-300"
-            : "border-gray-100"
-        }`}
+        className={`hover:shadow-2xl transition-all duration-300 overflow-hidden group h-full flex flex-col 
+            border-gray-100 dark:border-gray-800
+        `}
       >
         <CardContent className="p-0 flex flex-col h-full">
           {/* Thumbnail / Image Area */}
-          <div className="relative w-full h-36 sm:h-40 md:h-44 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-hidden shrink-0">
+          <div className="relative w-full h-36 sm:h-40 md:h-44 bg-gradient-to-br from-emerald-50 dark:from-emerald-900/20 dark:via-teal-900/20 dark:to-green-900/20 via-teal-50 to-green-100 overflow-hidden shrink-0">
             {idea.images ? (
               <Image
                 src={idea.images}
@@ -97,7 +95,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
               {/* Category */}
               {idea.category && (
                 <span
-                  className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm text-white"
+                  className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm text-white dark:text-white"
                   style={{
                     backgroundColor: idea.category.color ?? "#059669",
                   }}
@@ -120,7 +118,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
                   <Lock className="h-2.5 w-2.5" />${idea.price}
                 </span>
               ) : (
-                <span className="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-md">
+                <span className="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white  shadow-md">
                   Free
                 </span>
               )}
@@ -137,19 +135,19 @@ export function IdeaCard({ idea }: IdeaCardProps) {
           {/* Card Body */}
           <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-1 gap-2 sm:gap-3">
             {/* Title */}
-            <h3 className="font-bold text-sm sm:text-base md:text-lg leading-snug text-gray-900 group-hover:text-emerald-700 transition-colors line-clamp-2">
+            <h3 className="font-bold text-sm sm:text-base md:text-lg leading-snug text-textPrimary group-hover:text-emerald-700 transition-colors line-clamp-2">
               {idea.title}
             </h3>
 
             {/* Problem Statement */}
             {idea.problemStatement && (
-              <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 leading-relaxed">
+              <p className="text-xs sm:text-sm text-textSecondary line-clamp-2 leading-relaxed">
                 {idea.problemStatement}
               </p>
             )}
 
             {/* Author + Date */}
-            <div className="flex items-center gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100">
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-border">
               {/* Avatar */}
               <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center shrink-0 shadow-sm">
                 <span className="text-white text-[9px] sm:text-[10px] font-bold">
@@ -157,23 +155,23 @@ export function IdeaCard({ idea }: IdeaCardProps) {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] sm:text-xs font-semibold text-gray-700 truncate">
+                <p className="text-[10px] sm:text-xs font-semibold text-textPrimary truncate">
                   {idea.author?.name ?? "Anonymous"}
                 </p>
-                <p className="text-[9px] sm:text-[10px] text-gray-400">
+                <p className="text-[9px] sm:text-[10px] text-textSecondary">
                   {publishedDate}
                 </p>
               </div>
 
               {/* Vote + Comment counts */}
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                <div className="flex items-center gap-0.5 text-gray-500">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-textSecondary">
+                <div className="flex items-center gap-0.5">
                   <ArrowBigUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />
                   <span className="text-[10px] sm:text-xs font-semibold">
                     {upvotes}
                   </span>
                 </div>
-                <div className="flex items-center gap-0.5 text-gray-500">
+                <div className="flex items-center gap-0.5">
                   <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span className="text-[10px] sm:text-xs font-semibold">
                     {comments}

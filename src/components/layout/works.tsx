@@ -65,9 +65,19 @@ const steps = [
   },
 ];
 
-function StepCard({ number, icon, title, description }) {
+function StepCard({
+  number,
+  icon,
+  title,
+  description,
+}: {
+  number: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
-    <div className="group bg-gray-50 rounded-2xl p-6 md:p-8 flex items-start gap-4 text-left border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300">
+    <div className="group bg-bgSecondary rounded-2xl p-6 md:p-8 flex items-start gap-4 text-left border border-border hover:border-border hover:shadow-sm transition-all duration-300">
       {/* Icon */}
       <div className="flex-shrink-0">
         <div className="w-10 h-10 md:w-11 md:h-11 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
@@ -78,17 +88,17 @@ function StepCard({ number, icon, title, description }) {
       {/* Content */}
       <div className="flex flex-col items-start text-left flex-1">
         {/* Number */}
-        <p className="text-4xl md:text-5xl font-bold text-black/10 leading-none mb-2 w-full text-left">
+        <p className="text-4xl md:text-5xl font-bold text-textPrimary/10 leading-none mb-2 w-full text-left">
           {number}
         </p>
 
         {/* Title */}
-        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 w-full text-left">
+        <h3 className="text-base md:text-lg font-semibold text-textPrimary mb-2 w-full text-left">
           {title}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-500 leading-relaxed w-full text-left">
+        <p className="text-sm text-textSecondary leading-relaxed w-full text-left">
           {description}
         </p>
       </div>
@@ -99,11 +109,11 @@ function StepCard({ number, icon, title, description }) {
 export default function HowItWorks() {
   return (
     <section className="py-16 px-5 max-w-6xl mx-auto text-center">
-      <p className="text-xs font-medium tracking-widest uppercase text-gray-400 mb-2">
+      <p className="text-xs font-medium tracking-widest uppercase text-textSecondary mb-2">
         Simple Process
       </p>
       <h1
-        className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
+        className="text-center font-serif font-semibold tracking-tight text-textPrimary
 md:text-[50px] text-[40px] leading-[1.05] mb-6"
       >
         How It{" "}
@@ -114,7 +124,7 @@ md:text-[50px] text-[40px] leading-[1.05] mb-6"
           Works
         </span>{" "}
       </h1>
-      <p className="text-base text-gray-500 mb-12">
+      <p className="text-base text-textSecondary mb-12">
         Three simple steps to turn your eco idea into real impact.
       </p>
 

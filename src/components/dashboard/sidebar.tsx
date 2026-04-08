@@ -58,13 +58,13 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white border shadow-sm hover:bg-gray-50"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-bgPrimary border shadow-sm hover:bg-bgSecondary"
         aria-label="Toggle menu"
       >
         {isOpen ? (
-          <X className="h-6 w-6 text-gray-600" />
+          <X className="h-6 w-6 text-textSecondary" />
         ) : (
-          <Menu className="h-6 w-6 text-gray-600" />
+          <Menu className="h-6 w-6 text-textSecondary" />
         )}
       </button>
 

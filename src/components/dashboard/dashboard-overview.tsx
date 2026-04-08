@@ -8,6 +8,7 @@ import { RecentIdeasList } from "./recent-idea-list";
 import { StatsGrid } from "./stat-card";
 import { StatusBreakdownChart } from "./status-breakdown";
 import { VotesCountCard } from "./vote-count";
+import { SmartInsights } from "./smart-insights";
 
 interface User {
   name: string;
@@ -65,6 +66,9 @@ export function DashboardOverview({
         <StatsSkeleton />
       ) : (
         <>
+          {/* AI Insights Card */}
+          <SmartInsights stats={stats} />
+
           {/* ── Row 1: stat cards ──────────────────────────────────────── */}
           <StatsGrid stats={stats} />
 

@@ -2,20 +2,20 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-12">
+    <footer className="bg-bgSecondary border-t border-border py-12">
       <div className="container px-4 md:px-6 mx-auto grid md:grid-cols-4 gap-8">
         <div className="space-y-4">
           <h3 className="font-bold text-lg flex items-center gap-2">
-            <span className="text-black">🌿 EcoSpark Hub</span>
+            <span className="text-textPrimary">🌿 EcoSpark Hub</span>
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-textSecondary">
             Empowering learners and educators worldwide through seamless
             connection and personalized guidance.
           </p>
         </div>
         <div>
           <h4 className="font-semibold mb-4">Platform</h4>
-          <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+          <ul className="space-y-2 text-sm text-textSecondary">
             <li>
               <Link href="/ideas" className="hover:text-blue-600">
                 Find Ideas
@@ -35,7 +35,7 @@ export default function Footer() {
         </div>
         <div>
           <h4 className="font-semibold mb-4">Categories</h4>
-          <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+          <ul className="space-y-2 text-sm text-textSecondary">
             <li>
               <Link
                 href="/tutors?category=Programming"
@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
         <div>
           <h4 className="font-semibold mb-4">Support</h4>
-          <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+          <ul className="space-y-2 text-sm text-textSecondary">
             <li>
               <Link href="#" className="hover:text-blue-600">
                 Help Center
@@ -83,7 +83,7 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="container px-4 md:px-6 mx-auto mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500">
+      <div className="container px-4 md:px-6 mx-auto mt-12 pt-8 border-t border-border text-center text-sm text-textSecondary">
         © {new Date().getFullYear()} 🌿 EcoSpark Hub. All rights reserved.
       </div>
     </footer>

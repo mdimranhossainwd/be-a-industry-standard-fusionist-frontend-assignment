@@ -67,12 +67,12 @@ export default function SubscriberTable({ subscribers }: Props) {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <div className="bg-bgPrimary rounded-2xl border border-border overflow-hidden">
       {/* Header */}
       <div className="px-6 py-5 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="font-bold text-gray-900 text-lg">Subscribers</h3>
-          <p className="text-sm text-gray-400 mt-0.5">
+          <h3 className="font-bold text-textPrimary text-lg">Subscribers</h3>
+          <p className="text-sm text-textSecondary mt-0.5">
             {subscribers.length} total subscribers
           </p>
         </div>
@@ -82,14 +82,14 @@ export default function SubscriberTable({ subscribers }: Props) {
           className="flex items-center gap-2 bg-gray-50 border border-gray-200
                         rounded-full px-4 py-2 w-full sm:w-[260px]"
         >
-          <RiSearchLine className="text-gray-400 flex-shrink-0" size={15} />
+          <RiSearchLine className="text-textSecondary flex-shrink-0" size={15} />
           <input
             type="text"
             placeholder="Search email or name…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent text-sm text-gray-700 outline-none
-                       placeholder:text-gray-400 w-full"
+            className="bg-transparent text-sm text-textPrimary outline-none
+                       placeholder:text-textSecondary w-full"
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function SubscriberTable({ subscribers }: Props) {
               ${
                 filter === tab.key
                   ? "bg-[#1a6b3c] text-white"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  : "bg-bgSecondary text-textSecondary hover:bg-muted/50"
               }`}
           >
             {tab.label}
@@ -117,29 +117,29 @@ export default function SubscriberTable({ subscribers }: Props) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Subscriber
               </th>
-              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Type
               </th>
-              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Status
               </th>
-              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Subscribed
               </th>
-              <th className="text-right px-6 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th className="text-right px-6 py-3 text-xs font-semibold uppercase tracking-wide text-textSecondary">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-border">
             {filtered.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
-                  className="text-center py-12 text-gray-400 text-sm"
+                  className="text-center py-12 text-textSecondary text-sm"
                 >
                   No subscribers found
                 </td>
@@ -160,9 +160,9 @@ export default function SubscriberTable({ subscribers }: Props) {
                         <RiUserLine className="text-emerald-600" size={14} />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-800">{sub.email}</p>
+                        <p className="font-medium text-textPrimary">{sub.email}</p>
                         {sub.user?.name && (
-                          <p className="text-xs text-gray-400 mt-0.5">
+                          <p className="text-xs text-textSecondary mt-0.5">
                             {sub.user.name}
                           </p>
                         )}
@@ -209,7 +209,7 @@ export default function SubscriberTable({ subscribers }: Props) {
                   </td>
 
                   {/* Date */}
-                  <td className="px-6 py-4 text-gray-500 text-xs">
+                  <td className="px-6 py-4 text-textSecondary text-xs">
                     {new Date(sub.subscribedAt).toLocaleDateString("en-BD", {
                       day: "numeric",
                       month: "short",

@@ -188,13 +188,41 @@ export default function LoginForm() {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">
-              Or continue with
+            <span className="px-2 bg-bgPrimary text-textSecondary">
+              Demo access for reviewers
             </span>
           </div>
+        </div>
+
+        {/* Demo Login Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 cursor-pointer text-xs sm:text-sm font-semibold h-10 transition-all active:scale-95"
+            onClick={() => {
+              form.setFieldValue("email", "mdimranhossain.bd6@gmail.com");
+              form.setFieldValue("password", "12345678");
+              setTimeout(() => form.handleSubmit(), 100);
+            }}
+          >
+            Login as Member
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="border-teal-200 text-teal-700 hover:bg-teal-50 dark:hover:bg-teal-900/10 cursor-pointer text-xs sm:text-sm font-semibold h-10 transition-all active:scale-95"
+            onClick={() => {
+              form.setFieldValue("email", "mdimranhossain.wd@gmail.com");
+              form.setFieldValue("password", "12345678");
+              setTimeout(() => form.handleSubmit(), 100);
+            }}
+          >
+            Login as Admin
+          </Button>
         </div>
       </CardContent>
 

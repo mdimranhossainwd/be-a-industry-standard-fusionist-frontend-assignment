@@ -1,6 +1,7 @@
 import EcoChallengeBoard from "@/components/layout/challenge";
-import Footer from "@/components/layout/footer";
-import { Header } from "@/components/layout/navbar";
+
+import Footer from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Navbar";
 import TopPicksSection from "@/components/layout/newsletter";
 import HeroSection from "@/components/pages/hero";
 import { IdeaCard } from "@/components/tutors/tutor-card";
@@ -8,6 +9,10 @@ import { getUserInfo } from "@/services/auth.services";
 import { Idea } from "@/types/api.types";
 import HowItWorks from "../components/layout/works";
 import { getIdeasAction } from "./_action";
+import { AboutSection } from "@/components/landing/AboutSection";
+import { BlogSection } from "@/components/landing/BlogSection";
+import { ContactSection } from "@/components/landing/ContactSection";
+import { PolicySection } from "@/components/landing/PolicySection";
 
 export default async function Home() {
   const user = await getUserInfo();
@@ -20,7 +25,7 @@ export default async function Home() {
   console.log(highlightedIdeas);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen">
       <Header user={user} />
 
       <section className="py-20 text-center">
@@ -34,7 +39,7 @@ export default async function Home() {
           </div>
 
           <h1
-            className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
+            className="text-center font-serif font-semibold tracking-tight text-foreground
 text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
           >
             Ideas that{" "}
@@ -48,17 +53,17 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
           </h1>
 
           {/* Subtext */}
-          <p className="mx-auto mb-10 max-w-lg text-base leading-relaxed text-[#777]">
+          <p className="mx-auto mb-10 max-w-lg text-base leading-relaxed text-foreground">
             A platform where eco-conscious minds share groundbreaking ideas —
             from solar energy projects to zero-waste living.
           </p>
 
           {/* Buttons */}
           <div className="mb-14 flex flex-wrap justify-center gap-3">
-            <button className="rounded-full px-7 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 gap-1.5">
+            <button className="rounded-full px-7 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer text-[11px] sm:text-xs dark:text-white dark:border-[#c8c4bc] md:text-sm h-8 sm:h-9 md:h-10 gap-1.5">
               Explore Ideas →
             </button>
-            <button className="rounded-full border border-[#c8c4bc] px-7 py-3 text-sm font-medium text-[#1a1a1a] hover:border-[#2d5a27] hover:text-[#2d5a27] transition-colors">
+            <button className="rounded-full border border-[#c8c4bc] px-7 py-3 text-sm font-medium text-[#1a1a1a] dark:text-white dark:border-[#c8c4bc] hover:border-[#2d5a27] hover:text-[#2d5a27] transition-colors">
               Submit Idea
             </button>
           </div>
@@ -72,9 +77,7 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
             ].map((stat, i, arr) => (
               <div key={stat.label} className="flex items-center gap-8">
                 <div>
-                  <p className="font-serif text-2xl font-black text-[#1a1a1a]">
-                    {stat.value}
-                  </p>
+                  <p className="font-serif text-2xl font-black">{stat.value}</p>
                   <p className="mt-0.5 text-xs text-[#999]">{stat.label}</p>
                 </div>
                 {i < arr.length - 1 && (
@@ -88,7 +91,7 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
 
       <section className="container mx-auto px-4 md:px-0">
         <h1
-          className="text-center font-serif font-semibold tracking-tight text-[#0f172a]
+          className="text-center font-serif font-semibold tracking-tight text-[#0f172a] dark:text-white 
 text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
         >
           Featured{" "}
@@ -110,11 +113,19 @@ text-[clamp(2.2rem,5vw,4.5rem)] leading-[1.05] mb-6"
 
       <HowItWorks />
 
-      <TopPicksSection />
+      <AboutSection />
 
       <HeroSection />
 
       <EcoChallengeBoard />
+
+      <BlogSection />
+
+      <TopPicksSection />
+
+      <ContactSection />
+
+      <PolicySection />
 
       <Footer />
     </div>

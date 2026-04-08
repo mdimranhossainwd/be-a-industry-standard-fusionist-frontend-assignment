@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Button } from "../ui/button";
+import { ModeToggle } from "../ui/theme-toggle";
 
 type User = {
   id: string;
@@ -84,7 +85,9 @@ export function Header({ user }: { user: User }) {
     <Navbar>
       <NavBody>
         <NavbarLogo />
+
         <NavItems items={navItems} />
+        <ModeToggle />
         <div className="flex items-center space-x-2">
           <div className="flex items-center gap-2">
             {user ? (

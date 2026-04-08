@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { ThemeProvider } from "../providers/ThemeProvider";
+import { GlobalChatbot } from "@/components/ui/chatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +31,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProviders>{children}</QueryProviders>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProviders>
+            {children}
+            <GlobalChatbot />
+          </QueryProviders>
+        </ThemeProvider>
         <Toaster richColors />
       </body>
     </html>

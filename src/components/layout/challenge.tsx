@@ -63,8 +63,8 @@ function ChallengeCard({ c }: { c: Challenge }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        backgroundColor: isDark ? "#111827" : "#ffffff",
-        borderColor: isDark ? "#1f2937" : "#f3f4f6",
+        backgroundColor: isDark ? "var(--bg-primary)" : "var(--bg-primary)",
+        borderColor: isDark ? "var(--border)" : "var(--border)",
         opacity: isEnded && !hovered ? 0.6 : 1,
         transition: "background-color 0.3s, border-color 0.3s, opacity 0.3s",
       }}
@@ -83,7 +83,7 @@ function ChallengeCard({ c }: { c: Challenge }) {
 
         <h3
           style={{
-            color: isDark ? "#ffffff" : "#111827",
+            color: isDark ? "var(--text-primary)" : "var(--text-primary)",
             transition: "color 0.3s",
           }}
           className="text-base font-semibold mt-3 mb-2"
@@ -93,7 +93,7 @@ function ChallengeCard({ c }: { c: Challenge }) {
 
         <p
           style={{
-            color: isDark ? "#9ca3af" : "#6b7280",
+            color: isDark ? "var(--text-secondary)" : "var(--text-secondary)",
             transition: "color 0.3s",
           }}
           className="text-sm leading-relaxed"
@@ -106,7 +106,7 @@ function ChallengeCard({ c }: { c: Challenge }) {
         {c.entries !== null && (
           <span
             style={{
-              color: isDark ? "#9ca3af" : "#9ca3af",
+              color: isDark ? "var(--text-secondary)" : "var(--text-secondary)",
               transition: "color 0.3s",
             }}
           >
@@ -155,7 +155,7 @@ export default function EcoChallengeBoard() {
         <p className="text-xs font-medium tracking-widest uppercase text-gray-400 mb-2">
           Compete & Collaborate
         </p>
-        <h2 className="font-black leading-tight text-[clamp(1.5rem,5vw,3rem)] text-[#1a1a1a]">
+        <h2 className="font-black leading-tight text-[clamp(1.5rem,5vw,3rem)] text-textPrimary">
           Eco{" "}
           <span
             className="italic bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 
@@ -165,7 +165,7 @@ export default function EcoChallengeBoard() {
           </span>{" "}
           Board
         </h2>
-        <p className="text-base text-gray-500">
+        <p className="text-base text-textSecondary">
           Monthly themed challenges to spark your best ideas.
         </p>
       </div>

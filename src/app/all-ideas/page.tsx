@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
-import Footer from "@/components/layout/footer";
-import { Header } from "@/components/layout/navbar";
+import Footer from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Navbar";
 import { getUserInfo } from "@/services/auth.services";
 import { getIdeasAction } from "../_action";
 import { getCategoriesAction } from "../admin/categories/_action";

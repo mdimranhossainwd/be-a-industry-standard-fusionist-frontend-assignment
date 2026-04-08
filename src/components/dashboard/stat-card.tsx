@@ -102,7 +102,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-xl  border border-border/50 p-4 flex flex-col gap-3 bg-white"
+          className="rounded-xl  border border-border/50 p-4 flex flex-col gap-3 bg-bgPrimary"
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-medium text-muted-foreground">
